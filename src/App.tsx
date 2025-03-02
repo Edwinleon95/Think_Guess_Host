@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";
 import NotFound from './pages/NotFound';
+import CreateRoom from './pages/CreateRoom';
+import Room from './pages/Room';
 
 
 export default function App() {
@@ -10,6 +12,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/create-room" element={<CreateRoom />} />
+        <Route path="/room/:roomId" element={<Room />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
