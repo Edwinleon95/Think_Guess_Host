@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000"; // Adjust if needed
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Adjust if needed
 
 export function useRooms() {
     const [rooms, setRooms] = useState<{ id: number; name: string }[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`${API_URL}/rooms`).then((res) => {
+        axios.get(`${BACKEND_URL}/rooms`).then((res) => {
             setRooms(res.data);
             setLoading(false);
         });

@@ -8,6 +8,7 @@ const CreateRoom = () => {
     const navigate = useNavigate();
     const { selectedCategoryId } = useGlobalStore();
     const [loading, setLoading] = useState(false); // State for loading
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const handleCreateRoom = async () => {
         if (!selectedCategoryId) return; // Prevent if no category selected
@@ -16,8 +17,10 @@ const CreateRoom = () => {
 
         try {
             // Call the backend to create the room with the selectedCategoryId
-            const response = await axios.post('http://localhost:3000/rooms', {
+            const response = await axios.post(`${BACKEND_URL}/rooms`, {
                 categoryId: selectedCategoryId, // Send the selected category ID
+            }, {
+                headers: { "ngrok-skip-browser-warning": "true" }
             });
 
             // Get the room ID from the response (assuming the response contains the room details)

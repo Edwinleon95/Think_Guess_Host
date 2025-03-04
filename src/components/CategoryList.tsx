@@ -7,18 +7,22 @@ interface Category {
     name: string;
 }
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const CategoryList: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const { selectedCategoryId, setSelectedCategoryId } = useGlobalStore(); // Zustand store
 
+
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
                 setError(""); // Reset error state before the request
-                const response = await axios.get<Category[]>("http://localhost:3000/categories");
+                const response = await axios.get<Category[]>(`${BACKEND_URL}/categories`, {
+                    headers: { "ngrok-skip-browser-warning": "true" }
+                });
                 setCategories(response.data);
             } catch (error) {
                 setError("Failed to fetch categories. Please try again later.");
