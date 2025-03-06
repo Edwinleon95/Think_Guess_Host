@@ -12,6 +12,7 @@ const CreatePlayer = () => {
     // Accessing Zustand state for player name and loading
     const setPlayerName = useGlobalStore((state) => state.setPlayerName);
     const setLoading = useGlobalStore((state) => state.setLoading);
+    const setRoomId = useGlobalStore((state) => state.setRoomId);
 
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -29,10 +30,10 @@ const CreatePlayer = () => {
 
             // Save player name to the global state (Zustand store)
             setPlayerName(name);
-
+            setRoomId(roomId);
             console.log(response);
             // Navigate to the waiting zone after creating the player
-            navigate(`/waiting-zone`);
+            navigate(`/gaiming-zone/waiting`);
         } catch (error) {
             console.error("Error creating player:", error);
             alert("Failed to create player. Please try again.");

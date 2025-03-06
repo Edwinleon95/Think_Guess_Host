@@ -1,40 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { io } from "socket.io-client";
-import defaultProfile from "/defaultProfile.svg"; // Import the default profile image
+import defaultProfile from "/defaultProfile.svg"; // Import default profile image
+import { useGlobalStore } from "../store";
+import { SOCKET } from "../services/socket";
 
 interface Player {
-    id: number;
+    id: string;
     name: string;
+    roomId: string;
 }
-
-// const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Replace with your backend URL
-const BACKEND_URL = "http://localhost:3000";
 
 const PlayerList = () => {
     const { roomId } = useParams<{ roomId: string }>(); // Get roomId from URL
     const [players, setPlayers] = useState<Player[]>([]);
 
+    const setPlayersJoined = useGlobalStore((state) => state.setPlayersJoined);
+
+    // Memoized function to update players
+    const handleCurrentPlayers = useCallback(
+        (newPlayers: Player[]) => {
+            setPlayersJoined(newPlayers);
+            setPlayers(newPlayers);
+        },
+        [setPlayersJoined]
+    );
 
     useEffect(() => {
         if (!roomId) return;
 
-        const newSocket = io(BACKEND_URL, {
-            query: { "ngrok-skip-browser-warning": "true" },
-        });
-
-        newSocket.emit("joinRoom", roomId);
-
-        newSocket.on("currentPlayers", (newPlayers) => {
-            console.log("Current players:", newPlayers);
-            setPlayers(newPlayers);
-        });
-
+        SOCKET.emit("joinRoom", roomId);
+        SOCKET.on("currentPlayers", handleCurrentPlayers);
 
         return () => {
-            newSocket.disconnect();
+            SOCKET.off("currentPlayers", handleCurrentPlayers);
         };
-    }, [roomId]); // Reconnect if roomId changes
+    }, [roomId, handleCurrentPlayers]); // Include dependencies properly
 
     return (
         <div className="p-6 bg-white shadow-lg rounded-xl">

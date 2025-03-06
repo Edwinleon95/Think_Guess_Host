@@ -1,9 +1,34 @@
+import { useEffect } from "react";
 import { useGlobalStore } from "../store"; // Import Zustand store
 import defaultProfile from "/defaultProfile.svg"; // Import the default profile image
+import { SOCKET } from "../services/socket";
+import { useNavigate } from "react-router-dom";
 
 const WaitingZone = () => {
-    // Access the player name from Zustand store
+    // Access state from Zustand store
     const playerName = useGlobalStore((state) => state.playerName);
+    const roomId = useGlobalStore((state) => state.roomId);
+
+    const navigate = useNavigate(); // ✅ Move useNavigate OUTSIDE useEffect
+
+    useEffect(() => {
+        console.log("WaitingZone roomId:", roomId);
+        if (!roomId) return; // Prevent emitting if roomId is not set
+
+        SOCKET.emit("waitingZone", roomId.toString());
+
+        const handleStartGame = (startGame: boolean) => {
+            if (startGame) {
+                navigate(`/gaiming-zone/player`);
+            }
+        };
+
+        SOCKET.on("waitingZone", handleStartGame);
+
+        return () => {
+            SOCKET.off("waitingZone", handleStartGame); // ✅ Clean up listener
+        };
+    }, [roomId, navigate]); // ✅ Added roomId & navigate to dependencies
 
     return (
         <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-lg">
