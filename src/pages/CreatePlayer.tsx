@@ -10,9 +10,8 @@ const CreatePlayer = () => {
     const navigate = useNavigate();
 
     // Accessing Zustand state for player name and loading
-    const setPlayerName = useGlobalStore((state) => state.setPlayerName);
-    const setLoading = useGlobalStore((state) => state.setLoading);
-    const setRoomId = useGlobalStore((state) => state.setRoomId);
+    const { setPlayerName, setLoading, setRoomId, setCurrentPlayer } = useGlobalStore();
+
 
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -31,7 +30,7 @@ const CreatePlayer = () => {
             // Save player name to the global state (Zustand store)
             setPlayerName(name);
             setRoomId(roomId);
-            console.log(response);
+            setCurrentPlayer(response.data);
             // Navigate to the waiting zone after creating the player
             navigate(`/gaiming-zone/waiting`);
         } catch (error) {

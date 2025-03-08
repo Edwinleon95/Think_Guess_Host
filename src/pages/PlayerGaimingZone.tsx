@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import { useGlobalStore } from "../store";
 import { SOCKET } from "../services/socket"; // Import your SOCKET instance
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const PlayerGamingZone = () => {
     const [countdown, setCountdown] = useState(0);
     const [dataIsReady, setDataIsReady] = useState(false); // Add state for data readiness
     const [answerIsReady, setAnswerIsReady] = useState(false); // Add state for data readiness
     const [answer, setAnswer] = useState(""); // Add state for data readiness
-    const playerName = useGlobalStore((state) => state.playerName);
-    const roomId = useGlobalStore((state) => state.roomId); // Assuming roomId is stored in the global store
+    const [idQuestion, setIdQuestion] = useState(0);
+    const { currentPlayer, roomId, playerName, clearState } = useGlobalStore();
+    const navigate = useNavigate();
 
     // Function to start the countdown
     useEffect(() => {
@@ -31,18 +36,73 @@ const PlayerGamingZone = () => {
             setCountdown(5); // Start the countdown
         });
 
-        SOCKET.on("answerQuestion", ({ answer, answerIsReady }) => {
+        SOCKET.on("answerQuestion", async ({ answer, answerIsReady }) => {
             console.log("Answer received:", answer, answerIsReady);
             setAnswerIsReady(answerIsReady); // Update dataIsReady state
-            setAnswer(answer); // Update dataIsReady state
+            if (!answerIsReady) {
+                setAnswer(""); // Clear the answer state only if answerIsReady is true
+            }
         });
+
+        SOCKET.on("finishGame", async (finishGame) => {
+            console.log("Answer received:", finishGame);
+            if (finishGame) {
+                clearState();
+                navigate("/gaiming-zone/finish");
+            }
+        });
+
+        SOCKET.on("currentQuestion", (idQuestion) => {
+            console.log("Current question:", idQuestion);
+            setIdQuestion(idQuestion); // Update dataIsReady state
+            // setAnswer(answer); // Update dataIsReady state
+        });
+
 
         // Clean up the socket listener
         return () => {
             SOCKET.off("loadingGame");
             SOCKET.off("answerQuestion");
+            SOCKET.off("currentQuestion");
         };
     }, [roomId]);
+
+    const submitAnswer = async () => {
+        try {
+            // Ensure required fields are defined
+            if (!currentPlayer?.id || !roomId || !answer) {
+                console.error("Missing required fields");
+                return;
+            }
+
+            // Send the POST request
+            const response = await axios.post(
+                `${BACKEND_URL}/answers`,
+                {
+                    answer: answer,
+                    roomId: roomId,
+                    playerId: currentPlayer.id,
+                    itemId: idQuestion, // Replace with a valid itemId or handle accordingly
+                },
+                {
+                    headers: { "ngrok-skip-browser-warning": "true" },
+                }
+            );
+
+            // Log the response data
+            console.log("Answer submitted successfully:", response.data);
+            setAnswerIsReady(true); // Update answerIsReady state
+        } catch (error) {
+            console.error("Error submitting answer:", error);
+
+            // Provide more detailed error feedback
+            if (axios.isAxiosError(error)) {
+                console.error("Server responded with:", error.response?.data);
+            } else {
+                console.error("Unexpected error:", error);
+            }
+        }
+    };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-700 to-purple-900 text-white p-6">
@@ -97,13 +157,12 @@ const PlayerGamingZone = () => {
                                     type="text"
                                     placeholder="Type your answer here..."
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    value={answer}
+                                    onChange={(e) => setAnswer(e.target.value)}
                                 />
                                 <button
                                     className="w-full mt-4 px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg hover:bg-indigo-600 transition-colors duration-200 cursor-pointer"
-                                    onClick={() => {
-                                        // Handle answer submission
-                                        console.log("Answer submitted!");
-                                    }}
+                                    onClick={submitAnswer}
                                 >
                                     Submit Answer
                                 </button>

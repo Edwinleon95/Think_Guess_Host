@@ -8,6 +8,7 @@ import CreatePlayer from './pages/CreatePlayer';
 import PlayerGaimingZone from './pages/PlayerGaimingZone';
 import MainGaimingZone from './pages/MainGaimingZone';
 import WaitingZone from './pages/WaitingZone';
+import FinishGame from './pages/FinishGame';
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/gaiming-zone/waiting" element={<WaitingZone />} />
         <Route path="/gaiming-zone/player" element={<PlayerGaimingZone />} />
         <Route path="/gaiming-zone/main" element={<MainGaimingZone />} />
+        <Route path="/gaiming-zone/finish" element={<FinishGame />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

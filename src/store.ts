@@ -14,6 +14,7 @@ interface GlobalState {
     playerName: string | null;
     loading: boolean;
     playersJoined: Player[];
+    currentPlayer: Player;
 
     setSelectedCategoryId: (id: number) => void;
     setSelectedItemId: (id: number) => void;
@@ -22,21 +23,49 @@ interface GlobalState {
     setLoading: (isLoading: boolean) => void;
 
     setPlayersJoined: (players: Player[]) => void;
+    setCurrentPlayer: (currentPlayer: Player) => void;
     addPlayer: (player: Player) => void;
     removePlayer: (playerId: string) => void;
     resetPlayersJoined: () => void;
+
+    // Add clearState action
+    clearState: () => void;
 }
+
+// Define initial state for resetting
+const initialState: GlobalState = {
+    selectedCategoryId: null,
+    selectedItemId: null,
+    roomId: null,
+    playerName: null,
+    loading: false,
+    playersJoined: [],
+    currentPlayer: {
+        id: "",
+        name: "",
+        roomId: "",
+    },
+
+    // Placeholder functions (will be overridden by the store)
+    setSelectedCategoryId: () => { },
+    setSelectedItemId: () => { },
+    setRoomId: () => { },
+    setPlayerName: () => { },
+    setLoading: () => { },
+    setPlayersJoined: () => { },
+    setCurrentPlayer: () => { },
+    addPlayer: () => { },
+    removePlayer: () => { },
+    resetPlayersJoined: () => { },
+    clearState: () => { },
+};
 
 export const useGlobalStore = create<GlobalState>()(
     persist(
         (set) => ({
-            selectedCategoryId: null,
-            selectedItemId: null,
-            roomId: null,
-            playerName: null,
-            loading: false,
-            playersJoined: [],
+            ...initialState,
 
+            // Actions
             setSelectedCategoryId: (id) => set({ selectedCategoryId: id }),
             setSelectedItemId: (id) => set({ selectedItemId: id }),
             setRoomId: (id) => set({ roomId: id }),
@@ -44,6 +73,7 @@ export const useGlobalStore = create<GlobalState>()(
             setLoading: (isLoading) => set({ loading: isLoading }),
 
             setPlayersJoined: (players) => set({ playersJoined: players }),
+            setCurrentPlayer: (currentPlayer) => set({ currentPlayer }),
             addPlayer: (player) =>
                 set((state) => ({ playersJoined: [...state.playersJoined, player] })),
             removePlayer: (playerId) =>
@@ -51,10 +81,16 @@ export const useGlobalStore = create<GlobalState>()(
                     playersJoined: state.playersJoined.filter((player) => player.id !== playerId),
                 })),
             resetPlayersJoined: () => set({ playersJoined: [] }),
+
+            // Clear state action
+            clearState: () => {
+                set(initialState); // Reset in-memory state to initial values
+                useGlobalStore.persist.clearStorage(); // Clear persisted state from localStorage
+            },
         }),
         {
             name: "game-state", // Storage key
-            storage: createJSONStorage(() => localStorage), // Correct way to use localStorage
+            storage: createJSONStorage(() => localStorage), // Use localStorage
         }
     )
 );

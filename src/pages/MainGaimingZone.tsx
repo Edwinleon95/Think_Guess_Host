@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useGlobalStore } from "../store";
 import { SOCKET } from "../services/socket";
+import { useNavigate } from "react-router-dom";
 
 // Define the type for a question item from the API
 type Question = {
@@ -23,9 +24,11 @@ const MainGaimingZone: React.FC = () => {
     const [secondCountdown, setSecondCountdown] = useState<number>(0);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+    const [answers, setAnswers] = useState<[]>([]);
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
     const [gameEnded, setGameEnded] = useState<boolean>(false);
-    const { selectedCategoryId, roomId } = useGlobalStore();
+    const { selectedCategoryId, roomId, clearState } = useGlobalStore();
+    const navigate = useNavigate();
 
     // Ensure the socket listener is always set up when the component mounts
     useEffect(() => {
@@ -79,6 +82,16 @@ const MainGaimingZone: React.FC = () => {
         } else if (secondCountdown === 0 && currentQuestion) {
             setShowAnswer(true);
             SOCKET.emit("answerQuestion", { roomId: roomId, answer: currentQuestion.name, showAnswer: true });
+            const fetchAnswers = async () => {
+                try {
+                    const response = await axios.get<[]>(`${BACKEND_URL}/answers/${roomId}/${currentQuestion.id}`);
+                    setAnswers(response.data);
+                } catch (error) {
+                    console.error("Error fetching answers:", error);
+                }
+            };
+
+            fetchAnswers();
         }
     }, [secondCountdown]);
 
@@ -96,34 +109,17 @@ const MainGaimingZone: React.FC = () => {
 
         setQuestions(newQuestions);
         setCurrentQuestion(newQuestion);
-        setSecondCountdown(5);
+        SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
+        setSecondCountdown(2);
         setShowAnswer(false);
         SOCKET.emit("answerQuestion", { roomId: roomId, answer: "", showAnswer: false });
     };
 
     // Reset the game
     const resetGame = () => {
-        setQuestions([]); // Clear questions to trigger a refetch
-        setGameEnded(false);
-        setCountdown(5);
-        setCurrentQuestion(null);
-        setShowAnswer(false);
-        setSecondCountdown(0);
-        setDataIsReady(false); // Reset dataIsReady to false while refetching
-
-        // Refetch questions from the API
-        const fetchQuestions = async () => {
-            try {
-                const response = await axios.get<Question[]>(`${BACKEND_URL}/items/category/${selectedCategoryId}`);
-                setQuestions(response.data);
-                setDataIsReady(true); // Set dataIsReady to true after data is fetched
-            } catch (error) {
-                console.error("Error fetching questions:", error);
-                setDataIsReady(false); // Ensure dataIsReady remains false if there's an error
-            }
-        };
-
-        fetchQuestions();
+        SOCKET.emit("finishGame", roomId);
+        clearState();
+        navigate("/");
     };
 
     return (
@@ -154,7 +150,7 @@ const MainGaimingZone: React.FC = () => {
                             className="px-6 py-3 bg-green-500 hover:bg-green-700 text-white font-bold rounded-xl transition duration-300"
                             onClick={resetGame}
                         >
-                            Restart Game
+                            Finish Game
                         </button>
                     </>
                 ) : (
@@ -201,6 +197,26 @@ const MainGaimingZone: React.FC = () => {
                                 <p className="text-xl mb-6 text-gray-200">The correct answer was:</p>
                                 <div className="bg-white text-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-md text-center">
                                     <h2 className="text-4xl font-bold text-green-600">{currentQuestion.name}</h2>
+                                </div>
+                                <div className="mt-6">
+                                    <h2 className="text-2xl font-semibold mb-4 text-white">Answers:</h2>
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {answers.map((answer: { id: number; answer: string; player: { id: number; name: string } }) => (
+                                            <div key={answer.id} className="bg-white rounded-lg shadow-md p-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="text-lg font-semibold text-gray-900">
+                                                        {answer.player.name}
+                                                    </div>
+                                                    <div className="text-sm text-gray-500">
+                                                        Player ID: {answer.player.id}
+                                                    </div>
+                                                </div>
+                                                <div className="mt-2 text-gray-700">
+                                                    {answer.answer}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                                 <button
                                     className="mt-6 px-6 py-3 bg-indigo-500 hover:bg-indigo-700 text-white font-bold rounded-xl transition duration-300"
