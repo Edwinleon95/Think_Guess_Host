@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useGlobalStore } from "../store";
+import { SOCKET } from "../services/socket";
 
 // Define the type for a question item from the API
 type Question = {
@@ -17,14 +18,27 @@ type Question = {
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const MainGaimingZone: React.FC = () => {
-    const [countdown, setCountdown] = useState<number>(1);
+    const [countdown, setCountdown] = useState<number>(0);
     const [dataIsReady, setDataIsReady] = useState<boolean>(false); // Set initial state to false
     const [secondCountdown, setSecondCountdown] = useState<number>(0);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
     const [gameEnded, setGameEnded] = useState<boolean>(false);
-    const { selectedCategoryId } = useGlobalStore();
+    const { selectedCategoryId, roomId } = useGlobalStore();
+
+    // Ensure the socket listener is always set up when the component mounts
+    useEffect(() => {
+        const handleLoadingGame = (dataIsReady: boolean) => {
+            setDataIsReady(dataIsReady);
+        };
+
+        SOCKET.on("loadingGame", handleLoadingGame);
+
+        return () => {
+            SOCKET.off("loadingGame", handleLoadingGame);
+        };
+    }, []); // Empty dependency array ensures it runs only on mount
 
     // Fetch questions from the API
     useEffect(() => {
@@ -32,24 +46,27 @@ const MainGaimingZone: React.FC = () => {
             try {
                 const response = await axios.get<Question[]>(`${BACKEND_URL}/items/category/${selectedCategoryId}`);
                 setQuestions(response.data);
-                console.log("Questions fetched:", response.data);
-                setDataIsReady(true); // Set dataIsReady to true after data is fetched
+
+                // Ensure the event is emitted only after the listener is set up
+                SOCKET.emit("loadingGame", roomId);
+
                 setCountdown(5); // Start the countdown
             } catch (error) {
                 console.error("Error fetching questions:", error);
-                setDataIsReady(false); // Ensure dataIsReady remains false if there's an error
+                setDataIsReady(false);
             }
         };
 
         fetchQuestions();
-    }, [selectedCategoryId]); // Add selectedCategoryId as a dependency
+    }, [selectedCategoryId]);
+
 
     // Handle the initial countdown
     useEffect(() => {
         if (countdown > 0) {
             const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
             return () => clearTimeout(timer);
-        } else if (countdown === 0 && secondCountdown === 0) {
+        } else if (countdown === 0 && secondCountdown === 0 && dataIsReady) {
             startNewQuestion();
         }
     }, [countdown]);
@@ -61,6 +78,7 @@ const MainGaimingZone: React.FC = () => {
             return () => clearTimeout(timer);
         } else if (secondCountdown === 0 && currentQuestion) {
             setShowAnswer(true);
+            SOCKET.emit("answerQuestion", { roomId: roomId, answer: currentQuestion.name, showAnswer: true });
         }
     }, [secondCountdown]);
 
@@ -78,8 +96,9 @@ const MainGaimingZone: React.FC = () => {
 
         setQuestions(newQuestions);
         setCurrentQuestion(newQuestion);
-        setSecondCountdown(20);
+        setSecondCountdown(5);
         setShowAnswer(false);
+        SOCKET.emit("answerQuestion", { roomId: roomId, answer: "", showAnswer: false });
     };
 
     // Reset the game
@@ -112,9 +131,15 @@ const MainGaimingZone: React.FC = () => {
             {!dataIsReady ? (
                 // Show loading bar when data is not ready
                 <div className="flex flex-col items-center">
+                    {/* Progress Bar */}
                     <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden">
                         <div className="h-full bg-indigo-500 rounded-full animate-progress"></div>
                     </div>
+
+                    {/* Loading Text */}
+                    <p className="mt-2 text-white-500 font-semibold animate-pulse">
+                        Loading...
+                    </p>
                 </div>
             ) : (
                 // When data is ready, check if the game has ended

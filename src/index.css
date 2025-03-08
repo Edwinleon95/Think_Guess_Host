@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+    /* Custom Animation: Progress Bar */
+    --animate-progress: progress 5s linear infinite;
+
+    @keyframes progress {
+        0% {
+            width: 0%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+}

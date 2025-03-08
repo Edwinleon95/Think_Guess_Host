@@ -43,24 +43,33 @@ const CreatePlayer = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600">
-            <h1 className="text-3xl font-bold text-white mb-6">Join Room {roomId}</h1>
+        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-6">
+            {/* Room Title */}
+            <h1 className="text-3xl font-bold text-white mb-6 text-center">
+                Join Room: {roomId}
+            </h1>
 
-            <input
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="p-3 rounded-lg text-black w-72 text-lg mb-4"
-            />
-
-            <button
-                onClick={handleCreatePlayer}
-                className={`px-6 py-3 text-lg font-bold text-white rounded-lg transition duration-300 ${name ? "bg-green-500 hover:bg-green-600" : "bg-gray-400 cursor-not-allowed"
-                    }`}
-                disabled={!name}
-            >
-            </button>
+            {/* Name Input */}
+            <div className="bg-white text-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-md">
+                <h2 className="text-2xl font-bold mb-4 text-indigo-600 text-center">
+                    Enter Your Name
+                </h2>
+                <input
+                    type="text"
+                    placeholder="Type your name here..."
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+                />
+                <button
+                    onClick={handleCreatePlayer}
+                    className={`w-full mt-4 px-4 py-2 text-white font-semibold rounded-lg transition-colors duration-200 ${name ? "bg-indigo-500 hover:bg-indigo-600" : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                    disabled={!name}
+                >
+                    Join Room
+                </button>
+            </div>
         </div>
     );
 };

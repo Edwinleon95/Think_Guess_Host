@@ -31,17 +31,25 @@ const WaitingZone = () => {
     }, [roomId, navigate]); // ✅ Added roomId & navigate to dependencies
 
     return (
-        <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Waiting for Players...</h2>
+        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-6">
+            {/* Outer Card */}
+            <div className="flex flex-col items-center bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+                {/* Title */}
+                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center animate-pulse">
+                    Waiting for Players...
+                </h2>
 
-            {/* Player Card */}
-            <div className="flex flex-col items-center bg-gray-100 p-4 rounded-lg shadow-md">
-                <img
-                    src={defaultProfile}
-                    alt="Player avatar"
-                    className="w-20 h-20 rounded-full mb-2 border border-gray-300"
-                />
-                <p className="text-lg font-semibold text-gray-700">{playerName || "Waiting..."}</p>
+                {/* Player Card */}
+                <div className="flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-md w-full">
+                    <img
+                        src={defaultProfile}
+                        alt="Player avatar"
+                        className="w-24 h-24 rounded-full mb-4 border-2 border-gray-200"
+                    />
+                    <p className="text-xl font-semibold text-gray-700">
+                        {playerName || "Waiting..."}
+                    </p>
+                </div>
             </div>
         </div>
     );

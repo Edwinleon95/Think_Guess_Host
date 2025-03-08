@@ -9,18 +9,21 @@ const Room = () => {
     const { roomId } = useParams<{ roomId: string }>(); // Get roomId from URL
     const navigate = useNavigate();
     const qrValue = `${window.location.origin}/create-player?roomId=${roomId}`;
+    const { setRoomId } = useGlobalStore();
 
     // Get players from Zustand store
     const players = useGlobalStore((state) => state.playersJoined);
 
     // Memoized function to handle game start
     const handleStartGame = useCallback((startGame: boolean) => {
-        if (startGame) navigate(`/gaiming-zone/main`);
+        if (startGame) {
+            navigate(`/gaiming-zone/main`);
+        }
     }, [navigate]);
 
     useEffect(() => {
         if (!roomId) return;
-
+        setRoomId(Number(roomId));
         SOCKET.on("startGame", handleStartGame);
 
         return () => {
