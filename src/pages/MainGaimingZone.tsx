@@ -27,19 +27,26 @@ const MainGaimingZone: React.FC = () => {
     const [answers, setAnswers] = useState<[]>([]);
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
     const [gameEnded, setGameEnded] = useState<boolean>(false);
-    const { selectedCategoryId, roomId, clearState } = useGlobalStore();
+    const { selectedCategoryId, roomId } = useGlobalStore();
     const navigate = useNavigate();
 
     // Ensure the socket listener is always set up when the component mounts
     useEffect(() => {
-        const handleLoadingGame = (dataIsReady: boolean) => {
+        SOCKET.on("loadingGame", (dataIsReady: boolean) => {
             setDataIsReady(dataIsReady);
-        };
+        });
 
-        SOCKET.on("loadingGame", handleLoadingGame);
+        SOCKET.on("finishGame", (finishGame: boolean) => {
+            if (finishGame) {
+                //TODO: Implement the logic to clear the state
+                // clearState();
+                navigate("/");
+            }
+        })
 
         return () => {
-            SOCKET.off("loadingGame", handleLoadingGame);
+            SOCKET.off("loadingGame");
+            SOCKET.off("finishGame");
         };
     }, []); // Empty dependency array ensures it runs only on mount
 
@@ -49,7 +56,6 @@ const MainGaimingZone: React.FC = () => {
             try {
                 const response = await axios.get<Question[]>(`${BACKEND_URL}/items/category/${selectedCategoryId}`);
                 setQuestions(response.data);
-
                 // Ensure the event is emitted only after the listener is set up
                 SOCKET.emit("loadingGame", roomId);
 
@@ -62,7 +68,6 @@ const MainGaimingZone: React.FC = () => {
 
         fetchQuestions();
     }, [selectedCategoryId]);
-
 
     // Handle the initial countdown
     useEffect(() => {
@@ -110,7 +115,7 @@ const MainGaimingZone: React.FC = () => {
         setQuestions(newQuestions);
         setCurrentQuestion(newQuestion);
         SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
-        setSecondCountdown(2);
+        setSecondCountdown(30);
         setShowAnswer(false);
         SOCKET.emit("answerQuestion", { roomId: roomId, answer: "", showAnswer: false });
     };
@@ -118,8 +123,6 @@ const MainGaimingZone: React.FC = () => {
     // Reset the game
     const resetGame = () => {
         SOCKET.emit("finishGame", roomId);
-        clearState();
-        navigate("/");
     };
 
     return (

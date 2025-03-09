@@ -12,7 +12,7 @@ const PlayerGamingZone = () => {
     const [answerIsReady, setAnswerIsReady] = useState(false); // Add state for data readiness
     const [answer, setAnswer] = useState(""); // Add state for data readiness
     const [idQuestion, setIdQuestion] = useState(0);
-    const { currentPlayer, roomId, playerName, clearState } = useGlobalStore();
+    const { currentPlayer, roomId, playerName } = useGlobalStore();
     const navigate = useNavigate();
 
     // Function to start the countdown
@@ -44,26 +44,26 @@ const PlayerGamingZone = () => {
             }
         });
 
-        SOCKET.on("finishGame", async (finishGame) => {
-            console.log("Answer received:", finishGame);
-            if (finishGame) {
-                clearState();
-                navigate("/gaiming-zone/finish");
-            }
-        });
-
         SOCKET.on("currentQuestion", (idQuestion) => {
             console.log("Current question:", idQuestion);
             setIdQuestion(idQuestion); // Update dataIsReady state
-            // setAnswer(answer); // Update dataIsReady state
         });
 
+        SOCKET.on("finishGame", async (finishGame) => {
+            console.log("Answer received:", finishGame);
+            if (finishGame) {
+                //TODO: Add logic to clear the state
+                // clearState();
+                navigate("/gaiming-zone/finish");
+            }
+        });
 
         // Clean up the socket listener
         return () => {
             SOCKET.off("loadingGame");
             SOCKET.off("answerQuestion");
             SOCKET.off("currentQuestion");
+            SOCKET.off("finishGame");
         };
     }, [roomId]);
 
