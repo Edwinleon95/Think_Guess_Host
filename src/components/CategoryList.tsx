@@ -20,9 +20,7 @@ const CategoryList: React.FC = () => {
             try {
                 setLoading(true);
                 setError(""); // Reset error state before the request
-                const response = await axios.get<Category[]>(`${BACKEND_URL}/categories`, {
-                    headers: { "ngrok-skip-browser-warning": "true" }
-                });
+                const response = await axios.get<Category[]>(`${BACKEND_URL}/categories`);
                 setCategories(response.data);
             } catch (error) {
                 setError("Failed to fetch categories. Please try again later.");

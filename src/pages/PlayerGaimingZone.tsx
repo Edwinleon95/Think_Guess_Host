@@ -83,9 +83,6 @@ const PlayerGamingZone = () => {
                     roomId: roomId,
                     playerId: currentPlayer.id,
                     itemId: idQuestion, // Replace with a valid itemId or handle accordingly
-                },
-                {
-                    headers: { "ngrok-skip-browser-warning": "true" },
                 }
             );
 

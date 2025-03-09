@@ -19,8 +19,6 @@ const CreateRoom = () => {
             // Call the backend to create the room with the selectedCategoryId
             const response = await axios.post(`${BACKEND_URL}/rooms`, {
                 categoryId: selectedCategoryId, // Send the selected category ID
-            }, {
-                headers: { "ngrok-skip-browser-warning": "true" }
             });
 
             // Get the room ID from the response (assuming the response contains the room details)

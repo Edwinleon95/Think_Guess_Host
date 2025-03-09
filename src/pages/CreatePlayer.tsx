@@ -23,8 +23,6 @@ const CreatePlayer = () => {
             const response = await axios.post(`${BACKEND_URL}/players`, {
                 name,
                 roomId: roomId,
-            }, {
-                headers: { "ngrok-skip-browser-warning": "true" }
             });
 
             // Save player name to the global state (Zustand store)
