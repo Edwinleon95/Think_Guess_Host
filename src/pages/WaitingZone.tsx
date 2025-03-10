@@ -19,7 +19,7 @@ const WaitingZone = () => {
 
         const handleStartGame = (startGame: boolean) => {
             if (startGame) {
-                navigate(`/gaiming-zone/player`);
+                navigate(`/gaming-zone/player`);
             }
         };
 

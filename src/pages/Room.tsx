@@ -17,7 +17,7 @@ const Room = () => {
     // Memoized function to handle game start
     const handleStartGame = useCallback((startGame: boolean) => {
         if (startGame) {
-            navigate(`/gaiming-zone/main`);
+            navigate(`/gaming-zone/main`);
         }
     }, [navigate]);
 

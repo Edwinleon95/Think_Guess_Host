@@ -54,7 +54,7 @@ const PlayerGamingZone = () => {
             if (finishGame) {
                 //TODO: Add logic to clear the state
                 // clearState();
-                navigate("/gaiming-zone/finish");
+                navigate("/gaming-zone/finish");
             }
         });
 

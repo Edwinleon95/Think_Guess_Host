@@ -18,7 +18,7 @@ type Question = {
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const MainGaimingZone: React.FC = () => {
+const MainGamingZone: React.FC = () => {
     const [countdown, setCountdown] = useState<number>(0);
     const [dataIsReady, setDataIsReady] = useState<boolean>(false); // Set initial state to false
     const [secondCountdown, setSecondCountdown] = useState<number>(0);
@@ -236,4 +236,4 @@ const MainGaimingZone: React.FC = () => {
     );
 };
 
-export default MainGaimingZone;
+export default MainGamingZone;

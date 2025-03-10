@@ -30,7 +30,7 @@ const CreatePlayer = () => {
             setRoomId(roomId);
             setCurrentPlayer(response.data);
             // Navigate to the waiting zone after creating the player
-            navigate(`/gaiming-zone/waiting`);
+            navigate(`/gaming-zone/waiting`);
         } catch (error) {
             console.error("Error creating player:", error);
             alert("Failed to create player. Please try again.");

@@ -9,19 +9,23 @@ interface Player {
 
 interface GlobalState {
     selectedCategoryId: number | null;
+    loading: boolean;
     selectedItemId: number | null;
+
+
     roomId: number | null;
     playerName: string | null;
-    loading: boolean;
     playersJoined: Player[];
     currentPlayer: Player;
 
+    
     setSelectedCategoryId: (id: number) => void;
     setSelectedItemId: (id: number) => void;
-    setRoomId: (id: number) => void;
-    setPlayerName: (name: string) => void;
     setLoading: (isLoading: boolean) => void;
 
+
+    setRoomId: (id: number) => void;
+    setPlayerName: (name: string) => void;
     setPlayersJoined: (players: Player[]) => void;
     setCurrentPlayer: (currentPlayer: Player) => void;
     addPlayer: (player: Player) => void;
