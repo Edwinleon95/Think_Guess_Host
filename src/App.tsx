@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,22 +15,25 @@ import WaitingZone from './pages/WaitingZone';
 import FinishGame from './pages/FinishGame';
 
 export default function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/create-room" element={<CreateRoom />} />
-        <Route path="/room/:roomId" element={<Room />} />
-        <Route path="/create-player" element={<CreatePlayer />} />
-        <Route path="/gaming-zone/waiting" element={<WaitingZone />} />
-        <Route path="/gaming-zone/player" element={<PlayerGamingZone />} />
-        <Route path="/gaming-zone/main" element={<MainGamingZone />} />
-        <Route path="/gaming-zone/finish" element={<FinishGame />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+  const location = useLocation();
 
-      {/* Toastify container - Always present */}
+  return (
+    <div className="h-screen bg-gradient-to-br from-blue-400 to-purple-500">
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/create-room" element={<CreateRoom />} />
+          <Route path="/room/:roomId" element={<Room />} />
+          <Route path="/create-player" element={<CreatePlayer />} />
+          <Route path="/gaming-zone/waiting" element={<WaitingZone />} />
+          <Route path="/gaming-zone/player" element={<PlayerGamingZone />} />
+          <Route path="/gaming-zone/main" element={<MainGamingZone />} />
+          <Route path="/gaming-zone/finish" element={<FinishGame />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AnimatePresence>
+
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -40,8 +44,8 @@ export default function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored" // You can switch between "light", "dark", "colored"
+        theme="colored"
       />
-    </Router>
+    </div>
   );
 }
