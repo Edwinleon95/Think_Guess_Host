@@ -2,14 +2,16 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface Player {
-    id: string;
+    id: number;
     name: string;
-    roomId: string;
+    room: {
+        id: number;
+    };
 }
+
 
 interface GlobalState {
     selectedCategoryId: number | null;
-    loading: boolean;
     selectedItemId: number | null;
 
 
@@ -18,10 +20,9 @@ interface GlobalState {
     playersJoined: Player[];
     currentPlayer: Player;
 
-    
+
     setSelectedCategoryId: (id: number) => void;
     setSelectedItemId: (id: number) => void;
-    setLoading: (isLoading: boolean) => void;
 
 
     setRoomId: (id: number) => void;
@@ -29,7 +30,6 @@ interface GlobalState {
     setPlayersJoined: (players: Player[]) => void;
     setCurrentPlayer: (currentPlayer: Player) => void;
     addPlayer: (player: Player) => void;
-    removePlayer: (playerId: string) => void;
     resetPlayersJoined: () => void;
 
     // Add clearState action
@@ -42,12 +42,13 @@ const initialState: GlobalState = {
     selectedItemId: null,
     roomId: null,
     playerName: null,
-    loading: false,
     playersJoined: [],
     currentPlayer: {
-        id: "",
+        id: 0,
         name: "",
-        roomId: "",
+        room: {
+            id: 0,
+        },
     },
 
     // Placeholder functions (will be overridden by the store)
@@ -55,11 +56,9 @@ const initialState: GlobalState = {
     setSelectedItemId: () => { },
     setRoomId: () => { },
     setPlayerName: () => { },
-    setLoading: () => { },
     setPlayersJoined: () => { },
     setCurrentPlayer: () => { },
     addPlayer: () => { },
-    removePlayer: () => { },
     resetPlayersJoined: () => { },
     clearState: () => { },
 };
@@ -74,16 +73,11 @@ export const useGlobalStore = create<GlobalState>()(
             setSelectedItemId: (id) => set({ selectedItemId: id }),
             setRoomId: (id) => set({ roomId: id }),
             setPlayerName: (name) => set({ playerName: name }),
-            setLoading: (isLoading) => set({ loading: isLoading }),
 
             setPlayersJoined: (players) => set({ playersJoined: players }),
             setCurrentPlayer: (currentPlayer) => set({ currentPlayer }),
             addPlayer: (player) =>
                 set((state) => ({ playersJoined: [...state.playersJoined, player] })),
-            removePlayer: (playerId) =>
-                set((state) => ({
-                    playersJoined: state.playersJoined.filter((player) => player.id !== playerId),
-                })),
             resetPlayersJoined: () => set({ playersJoined: [] }),
 
             // Clear state action

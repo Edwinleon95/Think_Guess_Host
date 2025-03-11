@@ -1,57 +1,107 @@
-import { useEffect } from "react";
-import { useGlobalStore } from "../store"; // Import Zustand store
-import defaultProfile from "/defaultProfile.svg"; // Import the default profile image
+import { useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useGlobalStore } from "../store";
 import { SOCKET } from "../services/socket";
 import { useNavigate } from "react-router-dom";
+import defaultProfile from "/defaultProfile.svg";
 
 const WaitingZone = () => {
-    // Access state from Zustand store
-    const playerName = useGlobalStore((state) => state.playerName);
-    const roomId = useGlobalStore((state) => state.roomId);
+    const navigate = useNavigate();
+    const { currentPlayer } = useGlobalStore();
+    const roomId = currentPlayer?.room?.id;
 
-    const navigate = useNavigate(); // ✅ Move useNavigate OUTSIDE useEffect
+    const handleStartGame = useCallback((startGame: boolean) => {
+        if (startGame) {
+            navigate(`/gaming-zone/player`);
+        }
+    }, [navigate]);
 
     useEffect(() => {
-        console.log("WaitingZone roomId:", roomId);
-        if (!roomId) return; // Prevent emitting if roomId is not set
+        if (!roomId) return;
 
         SOCKET.emit("waitingZone", roomId.toString());
-
-        const handleStartGame = (startGame: boolean) => {
-            if (startGame) {
-                navigate(`/gaming-zone/player`);
-            }
-        };
-
         SOCKET.on("waitingZone", handleStartGame);
 
         return () => {
-            SOCKET.off("waitingZone", handleStartGame); // ✅ Clean up listener
+            SOCKET.off("waitingZone");
         };
-    }, [roomId, navigate]); // ✅ Added roomId & navigate to dependencies
+    }, [roomId, handleStartGame]);
+
+    if (!currentPlayer) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-600 to-purple-700">
+                <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="text-white text-xl"
+                >
+                    Loading player data...
+                </motion.div>
+            </div>
+        );
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-6">
-            {/* Outer Card */}
-            <div className="flex flex-col items-center bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-                {/* Title */}
-                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center animate-pulse">
-                    Waiting for Players...
-                </h2>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 p-4 sm:p-6"
+        >
+            <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl"
+            >
+                <AnimatePresence mode="wait">
+                    <motion.h2
+                        key="waiting-title"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="text-3xl font-bold text-center text-white mb-6"
+                    >
+                        Waiting for Players...
+                    </motion.h2>
+                </AnimatePresence>
 
-                {/* Player Card */}
-                <div className="flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-md w-full">
-                    <img
+                <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="flex flex-col items-center bg-white/20 p-6 rounded-xl backdrop-blur-sm"
+                >
+                    <motion.img
                         src={defaultProfile}
                         alt="Player avatar"
-                        className="w-24 h-24 rounded-full mb-4 border-2 border-gray-200"
+                        className="w-24 h-24 rounded-full mb-4 border-2 border-white/30"
+                        loading="lazy"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2 }}
                     />
-                    <p className="text-xl font-semibold text-gray-700">
-                        {playerName || "Waiting..."}
-                    </p>
-                </div>
-            </div>
-        </div>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-xl font-semibold text-white truncate max-w-full px-4"
+                    >
+                        {currentPlayer.name || "Waiting..."}
+                    </motion.p>
+                </motion.div>
+
+                <motion.div
+                    className="mt-6 flex justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                >
+                    <div className="flex items-center space-x-2 text-white/80">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        </span>
+                        <span>Room No: {roomId}</span>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     );
 };
 

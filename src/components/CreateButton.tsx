@@ -14,7 +14,7 @@ const CreateButton: FC<ButtonProps> = ({ onClick, disabled, loading, className, 
             onClick={onClick}
             disabled={disabled || loading}
             className={`px-8 py-4 text-xl font-semibold rounded-xl shadow-md transition-all duration-300 ease-in-out transform 
-                ${disabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 active:scale-95'} 
+                ${disabled ? 'bg-gray-400  cursor-not-allowed' : 'bg-gradient-to-r from-blue-400 to-purple-500 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 focus:ring-blue-300 cursor-pointer'} 
                 ${loading ? 'opacity-70' : ''} 
                 text-white focus:outline-none focus:ring-4 focus:ring-red-300 ${className}`}
         >

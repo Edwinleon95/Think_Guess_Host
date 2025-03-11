@@ -1,73 +1,129 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { useGlobalStore } from "../store"; // Import Zustand store
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useGlobalStore } from "../store";
+import CreateButton from "../components/CreateButton";
+
+
+interface Player {
+    id: number;
+    name: string;
+    room: {
+        id: number;
+    };
+}
 
 const CreatePlayer = () => {
     const [searchParams] = useSearchParams();
-    const roomId = Number(searchParams.get("roomId")); // Get roomId from URL
-    const [name, setName] = useState(""); // Local name state to update input field
     const navigate = useNavigate();
+    const [name, setName] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const roomId = Number(searchParams.get("roomId"));
 
-    // Accessing Zustand state for player name and loading
-    const { setPlayerName, setLoading, setRoomId, setCurrentPlayer } = useGlobalStore();
-
-
+    const { setPlayerName, setRoomId, setCurrentPlayer } = useGlobalStore();
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-    const handleCreatePlayer = async () => {
-        if (!name.trim()) return alert("Please enter your name");
+    const handleCreatePlayer = async (): Promise<void> => {
+        if (!name.trim()) {
+            toast.warning("Please enter your name");
+            return;
+        }
 
         try {
             setLoading(true);
-            const response = await axios.post(`${BACKEND_URL}/players`, {
+
+            const response = await axios.post<Player>(`${BACKEND_URL}/players`, {
                 name,
-                roomId: roomId,
+                roomId,
             });
 
-            // Save player name to the global state (Zustand store)
             setPlayerName(name);
             setRoomId(roomId);
             setCurrentPlayer(response.data);
-            // Navigate to the waiting zone after creating the player
             navigate(`/gaming-zone/waiting`);
-        } catch (error) {
+
+        } catch (error: unknown) {
             console.error("Error creating player:", error);
-            alert("Failed to create player. Please try again.");
+
+            const errorMessage = axios.isAxiosError(error)
+                ? error.response?.data?.message || "Failed to create player"
+                : "Failed to create player. Please try again.";
+
+            toast.error(errorMessage);
+
         } finally {
             setLoading(false);
         }
     };
 
-    return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-6">
-            {/* Room Title */}
-            <h1 className="text-3xl font-bold text-white mb-6 text-center">
-                Join Room: {roomId}
-            </h1>
+    if (!roomId) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-6">
+                <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-center text-white p-6 rounded-xl bg-red-500/90 backdrop-blur-sm"
+                >
+                    <h2 className="text-2xl font-bold mb-2">Invalid Room</h2>
+                    <p className="text-lg">Please scan the QR code again</p>
+                </motion.div>
+            </div>
+        );
+    }
 
-            {/* Name Input */}
-            <div className="bg-white text-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-4 text-indigo-600 text-center">
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 p-4 sm:p-6"
+        >
+            {/* Room Header */}
+            <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="mb-8 text-center"
+            >
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    Join Room
+                </h1>
+                <p className="text-xl text-white/90">#{roomId}</p>
+            </motion.div>
+
+            {/* Input Card */}
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="w-full max-w-xs sm:max-w-md bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl"
+            >
+                <h2 className="text-2xl font-bold text-center text-white mb-6">
                     Enter Your Name
                 </h2>
+
                 <input
                     type="text"
-                    placeholder="Type your name here..."
+                    placeholder="Your name..."
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+                    className="w-full px-4 py-3 text-lg bg-white/90 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                    autoFocus
                 />
-                <button
-                    onClick={handleCreatePlayer}
-                    className={`w-full mt-4 px-4 py-2 text-white font-semibold rounded-lg transition-colors duration-200 ${name ? "bg-indigo-500 hover:bg-indigo-600" : "bg-gray-400 cursor-not-allowed"
-                        }`}
-                    disabled={!name}
-                >
-                    Join Room
-                </button>
-            </div>
-        </div>
+
+                <div className="mt-6">
+                    <CreateButton
+                        onClick={handleCreatePlayer}
+                        disabled={!name.trim()}
+                        loading={loading}
+                        className="w-full text-lg py-3"
+                    >
+                        {loading ? 'Joining Room...' : 'Join Room'}
+                    </CreateButton>
+                </div>
+            </motion.div>
+        </motion.div>
     );
 };
 

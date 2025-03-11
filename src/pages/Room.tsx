@@ -4,6 +4,7 @@ import { useGlobalStore } from "../store"; // Zustand store
 import PlayerList from "../components/PlayerList";
 import { SOCKET } from "../services/socket";
 import { useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 
 const Room = () => {
     const { roomId } = useParams<{ roomId: string }>(); // Get roomId from URL
@@ -37,35 +38,42 @@ const Room = () => {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 p-6">
-            {/* Header Section */}
-            <div className="w-full max-w-4xl flex justify-between items-center bg-white p-4 rounded-lg shadow-lg">
-                {/* Room Title */}
-                <h1 className="text-3xl font-bold text-gray-800">
-                    Room <span className="text-blue-500">#{roomId}</span>
-                </h1>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 p-4 sm:p-6"
+        >
+            <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 p-6">
+                {/* Header Section */}
+                <div className="w-full max-w-4xl flex justify-between items-center bg-white p-4 rounded-lg shadow-lg">
+                    {/* Room Title */}
+                    <h1 className="text-3xl font-bold text-gray-800">
+                        Room <span className="text-blue-500">#{roomId}</span>
+                    </h1>
 
-                {/* QR Code */}
-                <div className="bg-gray-100 p-2 rounded-lg shadow-md">
-                    <QRCodeCanvas value={qrValue} size={80} />
+                    {/* QR Code */}
+                    <div className="bg-gray-100 p-2 rounded-lg shadow-md">
+                        <QRCodeCanvas value={qrValue} size={80} />
+                    </div>
                 </div>
-            </div>
 
-            {/* Player List */}
-            <div className="mt-6 w-full max-w-4xl">
-                <PlayerList />
-            </div>
+                {/* Player List */}
+                <div className="mt-6 w-full max-w-4xl">
+                    <PlayerList />
+                </div>
 
-            {/* Start Game Button (only if more than 1 player) */}
-            {players.length > 1 && (
-                <button
-                    onClick={startGame}
-                    className="mt-6 px-6 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition"
-                >
-                    Start Game
-                </button>
-            )}
-        </div>
+                {/* Start Game Button (only if more than 1 player) */}
+                {players.length > 1 && (
+                    <button
+                        onClick={startGame}
+                        className="mt-6 px-6 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition"
+                    >
+                        Start Game
+                    </button>
+                )}
+            </div>
+        </motion.div>
     );
 };
 
