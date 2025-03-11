@@ -11,13 +11,21 @@ const Landing = () => {
     return (
         <motion.div
             className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.3 }}
         >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Welcome to</h1>
-            <h2 className="text-5xl md:text-8xl font-bold text-yellow-300 mb-8">Think & Guess</h2>
+            <h1
+                className="text-4xl md:text-6xl font-extrabold text-white mb-8 text-center drop-shadow-lg"
+            >
+                Welcome to
+            </h1>
+            <h2
+                className="text-5xl md:text-8xl font-extrabold text-yellow-300 mb-8 text-center drop-shadow-lg"
+            >
+                Think & Guess
+            </h2>
 
             <button
                 onClick={handleStart}

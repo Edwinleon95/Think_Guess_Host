@@ -15,12 +15,14 @@ const Home = () => {
     return (
         <motion.div
             className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 px-4"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.3 }}
         >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-12 text-center bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text">
+            <h1
+                className="text-4xl md:text-6xl font-extrabold text-white mb-8 text-center drop-shadow-lg"
+            >
                 Let’s Get Started!
             </h1>
 

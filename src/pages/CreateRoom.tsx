@@ -1,23 +1,24 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalStore } from "../store";
-import CategoryList from '../components/CategoryList';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
+import CreateButton from '../components/CreateButton';
+import CategoryList from '../components/CategoryList';
 
-// Define the expected shape of the backend response for creating a room
 const BACKEND_URL: string = import.meta.env.VITE_BACKEND_URL;
+
 interface CreateRoomResponse {
     id: string;
 }
 
-// Component type
 const CreateRoom: FC = () => {
-    
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { selectedCategoryId, loading, setLoading } = useGlobalStore();
+    const { selectedCategoryId } = useGlobalStore();
 
-    const handleCreateRoom = async (): Promise<void> => {
+    const handleCreateRoom = async () => {
         if (!selectedCategoryId) {
             toast.warning('Please select a category first!');
             return;
@@ -26,78 +27,46 @@ const CreateRoom: FC = () => {
         setLoading(true);
 
         try {
-            const response: AxiosResponse<CreateRoomResponse> = await axios.post(`${BACKEND_URL}/rooms`, {
-                categoryId: selectedCategoryId,
-            });
-
-            const roomId = response.data.id;
-
-            navigate(`/room/${roomId}`);
-        } catch (error: unknown) {
-            console.error('Error creating room:', error);
-
-            // Optional: Type guard for error handling
-            if (axios.isAxiosError(error)) {
-                toast.error(`Failed to create room: ${error.message}`);
-            } else {
-                toast.error('Failed to create room. Please try again.');
-            }
+            const response = await axios.post<CreateRoomResponse>(
+                `${BACKEND_URL}/rooms`,
+                { categoryId: selectedCategoryId }
+            );
+            navigate(`/room/${response.data.id}`);
+        } catch (error) {
+            const message = axios.isAxiosError(error)
+                ? error.response?.data?.message || error.message
+                : 'Failed to create room';
+            toast.error(message);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blue-500 to-purple-600">
-            <h1 className="text-5xl font-extrabold text-white mb-8 drop-shadow-lg animate-fade-in">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blue-600 to-purple-700"
+        >
+            <h1
+                className="text-4xl md:text-6xl font-extrabold text-white mb-8 text-center drop-shadow-lg"
+            >
                 Choose a Category
             </h1>
+            <CategoryList />
 
-            <div className="w-full max-w-md animate-slide-up">
-                <CategoryList />
-            </div>
-
-            <button
+            <CreateButton
                 onClick={handleCreateRoom}
-                disabled={!selectedCategoryId || loading}
-                className={`mt-10 px-8 py-4 text-xl font-semibold rounded-xl shadow-md transition-all duration-300 ease-in-out transform 
-                    ${selectedCategoryId ? 'bg-red-500 hover:bg-red-600 active:scale-95' : 'bg-gray-400 cursor-not-allowed'} 
-                    ${loading ? 'opacity-70' : ''} 
-                    text-white focus:outline-none focus:ring-4 focus:ring-red-300`}
+                disabled={!selectedCategoryId}
+                loading={loading}
+                className="px-12 py-6 text-2xl"
             >
-                {loading ? (
-                    <div className="flex items-center justify-center space-x-2">
-                        <svg
-                            className="animate-spin h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                            ></circle>
-                            <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                            ></path>
-                        </svg>
-                        <span>Creating Room...</span>
-                    </div>
-                ) : (
-                    'Create Room'
-                )}
-            </button>
+                {loading ? 'Creating Room...' : 'Create Room'}
+            </CreateButton>
 
-            {loading && !selectedCategoryId && (
-                <div className="mt-4 text-white text-xl animate-pulse">Loading...</div>
-            )}
-        </div>
+        </motion.div>
     );
 };
 
