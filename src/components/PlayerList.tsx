@@ -5,9 +5,11 @@ import { useGlobalStore } from "../store";
 import { SOCKET } from "../services/socket";
 
 interface Player {
-    id: string;
+    id: number;
     name: string;
-    roomId: string;
+    room: {
+        id: number;
+    };
 }
 
 const PlayerList = () => {
