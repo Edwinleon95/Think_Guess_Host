@@ -10,13 +10,13 @@ import CategoryList from '../components/CategoryList';
 const BACKEND_URL: string = import.meta.env.VITE_BACKEND_URL;
 
 interface CreateRoomResponse {
-    id: string;
+    id: number;
 }
 
 const CreateRoom: FC = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
-    const { selectedCategoryId } = useGlobalStore();
+    const { selectedCategoryId, setRoomId } = useGlobalStore();
 
     const handleCreateRoom = async () => {
         if (!selectedCategoryId) {
@@ -31,7 +31,9 @@ const CreateRoom: FC = () => {
                 `${BACKEND_URL}/rooms`,
                 { categoryId: selectedCategoryId }
             );
-            navigate(`/room/${response.data.id}`);
+            const roomId = response.data.id;
+            setRoomId(roomId);
+            navigate(`/room/${roomId}`);
         } catch (error) {
             const message = axios.isAxiosError(error)
                 ? error.response?.data?.message || error.message

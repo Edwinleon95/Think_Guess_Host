@@ -3,11 +3,8 @@ import axios from "axios";
 import { useGlobalStore } from "../store";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { Category } from "../types/category.interface";
 
-interface Category {
-    id: number;
-    name: string;
-}
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 

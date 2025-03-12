@@ -1,13 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-interface Player {
-    id: number;
-    name: string;
-    room: {
-        id: number;
-    };
-}
+import { Player } from "./types/player.interface";
 
 
 interface GlobalState {

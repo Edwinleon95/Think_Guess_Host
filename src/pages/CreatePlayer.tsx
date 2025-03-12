@@ -5,15 +5,9 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { useGlobalStore } from "../store";
 import CreateButton from "../components/CreateButton";
+import { Player } from "../types/player.interface";
 
 
-interface Player {
-    id: number;
-    name: string;
-    room: {
-        id: number;
-    };
-}
 
 const CreatePlayer = () => {
     const [searchParams] = useSearchParams();

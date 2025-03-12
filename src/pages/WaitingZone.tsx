@@ -67,24 +67,20 @@ const WaitingZone = () => {
 
                 <motion.div
                     whileHover={{ scale: 1.02 }}
-                    className="flex flex-col items-center bg-white/20 p-6 rounded-xl backdrop-blur-sm"
+                    className="flex flex-col items-center bg-white/20 p-6 rounded-xl backdrop-blur-md shadow-md transition-all"
                 >
                     <motion.img
                         src={defaultProfile}
                         alt="Player avatar"
-                        className="w-24 h-24 rounded-full mb-4 border-2 border-white/30"
+                        className="w-24 h-24 rounded-full border-4 border-white shadow-lg mb-3"
                         loading="lazy"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.2 }}
                     />
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-xl font-semibold text-white truncate max-w-full px-4"
-                    >
+                    <p className="text-lg font-semibold text-white truncate max-w-full px-4">
                         {currentPlayer.name || "Waiting..."}
-                    </motion.p>
+                    </p>
                 </motion.div>
 
                 <motion.div
