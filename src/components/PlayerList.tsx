@@ -53,7 +53,7 @@ const PlayerList = () => {
                         <motion.div
                             key={player.id}
                             whileHover={{ scale: 1.05 }}
-                            className="flex flex-col items-center bg-white/20 backdrop-blur-md p-4 rounded-xl shadow-md transition-all"
+                            className="flex flex-col items-center backdrop-blur-md p-4 rounded-xl shadow-md transition-all"
                         >
                             <img
                                 src={defaultProfile}

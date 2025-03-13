@@ -67,7 +67,7 @@ const WaitingZone = () => {
 
                 <motion.div
                     whileHover={{ scale: 1.02 }}
-                    className="flex flex-col items-center bg-white/20 p-6 rounded-xl backdrop-blur-md shadow-md transition-all"
+                    className="flex flex-col items-center p-6 rounded-xl backdrop-blur-md shadow-md transition-all"
                 >
                     <motion.img
                         src={defaultProfile}
