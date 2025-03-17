@@ -8,11 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import CreateButton from "../components/CreateButton";
 
+const PLAYER_FRONTEND_URL = import.meta.env.VITE_PLAYER_FRONTEND_URL;
+
 const Room = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const { roomId, playersJoined } = useGlobalStore();
-    const qrValue = `${window.location.origin}/create-player?roomId=${roomId}`;
+    const qrValue = `${PLAYER_FRONTEND_URL}/create-player?roomId=${roomId}`;
 
     const handleStartGame = useCallback((startGame: boolean) => {
         if (startGame) {

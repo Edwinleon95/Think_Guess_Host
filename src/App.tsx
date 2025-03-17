@@ -8,10 +8,7 @@ import Landing from "./pages/Landing";
 import NotFound from './pages/NotFound';
 import CreateRoom from './pages/CreateRoom';
 import Room from './pages/Room';
-import CreatePlayer from './pages/CreatePlayer';
-import PlayerGamingZone from './pages/PlayerGamingZone';
 import MainGamingZone from './pages/MainGamingZone';
-import WaitingZone from './pages/WaitingZone';
 import FinishGame from './pages/FinishGame';
 
 export default function App() {
@@ -25,9 +22,6 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/create-room" element={<CreateRoom />} />
           <Route path="/room/:roomId" element={<Room />} />
-          <Route path="/create-player" element={<CreatePlayer />} />
-          <Route path="/gaming-zone/waiting" element={<WaitingZone />} />
-          <Route path="/gaming-zone/player" element={<PlayerGamingZone />} />
           <Route path="/gaming-zone/main" element={<MainGamingZone />} />
           <Route path="/gaming-zone/finish" element={<FinishGame />} />
           <Route path="*" element={<NotFound />} />
