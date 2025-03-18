@@ -9,7 +9,6 @@ import NotFound from './pages/NotFound';
 import CreateRoom from './pages/CreateRoom';
 import Room from './pages/Room';
 import MainGamingZone from './pages/MainGamingZone';
-import FinishGame from './pages/FinishGame';
 
 export default function App() {
   const location = useLocation();
@@ -23,7 +22,6 @@ export default function App() {
           <Route path="/create-room" element={<CreateRoom />} />
           <Route path="/room/:roomId" element={<Room />} />
           <Route path="/gaming-zone/main" element={<MainGamingZone />} />
-          <Route path="/gaming-zone/finish" element={<FinishGame />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
