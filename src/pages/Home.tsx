@@ -43,7 +43,7 @@ const Home = () => {
                 {/* Create Topic Card */}
                 <div className="flex-1 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center opacity-70 cursor-not-allowed">
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 text-center">
-                        Create a Topic
+                        Create a Category
                     </h2>
                     <button
                         onClick={handleCreateTopic}

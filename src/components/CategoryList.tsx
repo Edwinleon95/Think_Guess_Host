@@ -59,7 +59,7 @@ const CategoryList: React.FC = () => {
                     onClick={() => setSelectedCategoryId(cat.id)}
                 >
                     <h3 className="text-2xl font-bold text-center text-white">
-                        {cat.name}
+                        {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
                     </h3>
                 </motion.div>
             ))}

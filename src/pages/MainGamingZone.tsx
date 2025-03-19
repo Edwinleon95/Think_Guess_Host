@@ -142,7 +142,7 @@ const MainGamingZone: React.FC = () => {
         setQuestions(newQuestions);
         setCurrentQuestion(newQuestion);
         SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
-        setSecondCountdown(10000);
+        setSecondCountdown(60);
         setShowAnswer(false);
         SOCKET.emit("answerQuestion", { roomId: roomId, answer: "", showAnswer: false });
     };
