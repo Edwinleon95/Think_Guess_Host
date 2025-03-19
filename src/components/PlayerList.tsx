@@ -50,10 +50,9 @@ const PlayerList = () => {
                     className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
                 >
                     {players.map((player) => (
-                        <motion.div
+                        <div
                             key={player.id}
-                            whileHover={{ scale: 1.05 }}
-                            className="flex flex-col items-center backdrop-blur-md p-4 rounded-xl shadow-md transition-all"
+                            className="flex flex-col items-center p-4 rounded-xl shadow-md transition-all bg-gradient-to-br from-blue-600 to-purple-700"
                         >
                             <img
                                 src={defaultProfile}
@@ -61,7 +60,7 @@ const PlayerList = () => {
                                 className="w-20 h-20 rounded-full border-4 border-white shadow-lg mb-3"
                             />
                             <p className="text-white font-semibold text-lg">{player.name}</p>
-                        </motion.div>
+                        </div>
                     ))}
                 </motion.div>
             )}
