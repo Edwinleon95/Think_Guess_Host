@@ -1,33 +1,71 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Raffle } from './Raffle'; // Import the Raffle component
 
 interface FinishGameScreenProps {
     resetGame: () => void;
 }
 export const FinishGameScreen: FC<FinishGameScreenProps> = ({ resetGame }) => {
+    const [showRaffle, setShowRaffle] = useState(false); // State to control Raffle visibility
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-700 to-purple-900 text-white p-6">
             {/* Title */}
-            <h1 className="text-6xl font-extrabold mb-6 drop-shadow-lg animate-fade-in">
+            <motion.h1
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-6xl font-extrabold mb-6 drop-shadow-lg text-center"
+            >
                 🎉 Congratulations! 🎉
-            </h1>
+            </motion.h1>
 
             {/* Subtitle */}
-            <p className="text-2xl mb-8 text-gray-200 font-medium text-center">
+            <motion.p
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-2xl mb-8 text-gray-200 font-medium text-center"
+            >
                 You've answered all the questions! Great job! 🚀
-            </p>
+            </motion.p>
+
+            {/* Surprise Button */}
+            {!showRaffle && (
+                <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                    className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg mb-8 cursor-pointer"
+                    onClick={() => setShowRaffle(true)} // Show the Raffle component
+                >
+                    🎁 Click Here to Surprise! 🎁
+                </motion.button>
+            )}
+
+            {/* Raffle Component */}
+            {showRaffle && <Raffle />}
 
             {/* Finish Game Button */}
-            <button
+            <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.9 }}
                 className="px-8 py-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
                 onClick={resetGame}
             >
                 Finish Game
-            </button>
+            </motion.button>
 
             {/* Optional: Add a decorative element */}
-            <div className="mt-12 text-gray-300 text-sm">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="mt-12 text-gray-300 text-sm"
+            >
                 Made with ❤️ by Your classmate Edwin 🤟
-            </div>
+            </motion.div>
         </div>
     );
-}
+};
