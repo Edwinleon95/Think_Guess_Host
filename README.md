@@ -1,3 +1,4 @@
+
 # 🎮 Think & Guess Host App
 
 Welcome to the **Think & Guess Host App!**  
@@ -54,6 +55,7 @@ The **Host App** interacts with the **Player App** in real time via WebSockets.
 
 ### Styling
 - **Tailwind CSS** `^4.0.9`
+- **@emotion/react & styled** `^11.14.0`
 - **Framer Motion** `^12.4.11` - Animations
 
 ### UI Enhancements
@@ -61,4 +63,84 @@ The **Host App** interacts with the **Player App** in real time via WebSockets.
 
 ---
 
+## 📂 Project Structure
 
+```
+├── src
+│   ├── assets/           # Images and static assets
+│   ├── components/       # Reusable UI components (Buttons, Modals, etc.)
+│   ├── hooks/            # Custom React hooks
+│   ├── pages/            # Page components (Home, Game, Results, etc.)
+│   ├── services/         # API calls and socket connections
+│   ├── types/            # TypeScript type definitions
+│   ├── App.css           # App-specific styles
+│   ├── App.tsx           # Main app component and routing
+│   ├── index.css         # Global styles (Tailwind import)
+│   ├── main.tsx          # App entry point
+│   ├── store.ts          # Zustand state management setup
+│   └── vite-env.d.ts     # Vite environment types
+│
+├── .env                  # Environment variables
+├── .gitignore
+├── eslint.config.js      # ESLint configuration
+├── index.html            # HTML entry point for the app
+├── package.json
+├── package-lock.json
+├── README.md
+├── tsconfig.json         # TypeScript configuration
+├── tsconfig.app.json     # App-specific TypeScript config
+├── tsconfig.node.json    # Node.js-specific TypeScript config
+└── vite.config.ts        # Vite build configuration
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+1. **Clone the repository:**
+
+```bash
+git clone https://github.com/Edwinleon95/DoodleGuess_FrontEnd.git
+```
+
+2. **Navigate to the project folder:**
+
+```bash
+cd DoodleGuess_FrontEnd
+```
+
+3. **Install dependencies:**
+
+```bash
+npm install
+```
+
+4. **Run the development server:**
+
+```bash
+npm run dev
+```
+
+---
+
+## 🕹️ How to Play as Host
+
+1. Start the **Host App**.
+2. Create a game session and wait for players to join via QR code or game code.
+3. Start the game and control the flow by sending questions and managing rounds.
+4. View real-time results and display rankings after each round.
+
+
+---
+
+
+## 🙌 Acknowledgements
+
+Thanks to the open-source community and the libraries that made this project possible.  
+Special shout-out to:
+- React
+- TailwindCSS
+- Framer Motion
+- Zustand
+- Socket.IO  
+... and all the tools that made this project awesome.
