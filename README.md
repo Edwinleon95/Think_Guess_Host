@@ -79,18 +79,6 @@ The **Host App** interacts with the **Player App** in real time via WebSockets.
 │   ├── main.tsx          # App entry point
 │   ├── store.ts          # Zustand state management setup
 │   └── vite-env.d.ts     # Vite environment types
-│
-├── .env                  # Environment variables
-├── .gitignore
-├── eslint.config.js      # ESLint configuration
-├── index.html            # HTML entry point for the app
-├── package.json
-├── package-lock.json
-├── README.md
-├── tsconfig.json         # TypeScript configuration
-├── tsconfig.app.json     # App-specific TypeScript config
-├── tsconfig.node.json    # Node.js-specific TypeScript config
-└── vite.config.ts        # Vite build configuration
 ```
 
 ---
@@ -123,24 +111,3 @@ npm run dev
 
 ---
 
-## 🕹️ How to Play as Host
-
-1. Start the **Host App**.
-2. Create a game session and wait for players to join via QR code or game code.
-3. Start the game and control the flow by sending questions and managing rounds.
-4. View real-time results and display rankings after each round.
-
-
----
-
-
-## 🙌 Acknowledgements
-
-Thanks to the open-source community and the libraries that made this project possible.  
-Special shout-out to:
-- React
-- TailwindCSS
-- Framer Motion
-- Zustand
-- Socket.IO  
-... and all the tools that made this project awesome.
