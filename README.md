@@ -1,50 +1,19 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🎮 Think & Guess Host App
+Welcome to the Think & Guess Host App! This app is the central control hub for managing the flow of the Think & Guess game. 🕹️ It allows you, as the host, to create games, monitor player participation, display questions, and showcase results. Your role is crucial in ensuring the game runs smoothly and everyone has a great time! 🚀
 
-Currently, two official plugins are available:
+🤝 How It Works
+The Think & Guess Host App interacts with the Player App in real-time using sockets. Here’s how it all comes together:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🎉 Create a Game: As the host, you set up a game session and wait for players to join.
 
-## Expanding the ESLint configuration
+📨 Send Questions: The Host App sends questions and game data to the backend.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+🔄 Real-Time Updates: The backend processes the data and relays it to the Player App, which displays questions, player responses, and other important information to the participants.
 
-- Configure the top-level `parserOptions` property like this:
+🎤 Your Role as the Host
+As the host, you’re in charge of:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+📝 Creating Questions: Craft engaging and challenging questions for the players.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+⏩ Managing Game Flow: Control the pace of the game, display results, and ensure a seamless experience for all players.
