@@ -1,12 +1,10 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { motion } from 'framer-motion';
-import { Raffle } from './Raffle'; // Import the Raffle component
 
 interface FinishGameScreenProps {
     resetGame: () => void;
 }
 export const FinishGameScreen: FC<FinishGameScreenProps> = ({ resetGame }) => {
-    const [showRaffle, setShowRaffle] = useState(false); // State to control Raffle visibility
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-700 to-purple-900 text-white p-6">
@@ -29,22 +27,6 @@ export const FinishGameScreen: FC<FinishGameScreenProps> = ({ resetGame }) => {
             >
                 You've answered all the questions! Great job! 🚀
             </motion.p>
-
-            {/* Surprise Button */}
-            {!showRaffle && (
-                <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg mb-8 cursor-pointer"
-                    onClick={() => setShowRaffle(true)} // Show the Raffle component
-                >
-                    🎁 Click Here to Surprise! 🎁
-                </motion.button>
-            )}
-
-            {/* Raffle Component */}
-            {showRaffle && <Raffle />}
 
             {/* Finish Game Button */}
             <motion.button
