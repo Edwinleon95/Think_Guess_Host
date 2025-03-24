@@ -6,5 +6,6 @@ interface Player {
 export interface Answer {
     id: number;
     answer: string;
+    isCorrect: boolean;
     player: Player;
 }

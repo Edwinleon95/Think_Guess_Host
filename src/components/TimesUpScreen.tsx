@@ -9,10 +9,6 @@ interface TimesUpScreenProps {
 const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
     const { currentQuestion, answers, loading } = useGlobalStore();
 
-    // Case-insensitive answer comparison
-    const isCorrectAnswer = (userAnswer: string) => {
-        return userAnswer.toLowerCase() === currentQuestion?.name.toLowerCase();
-    };
 
     return (
         <motion.div
@@ -92,7 +88,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.2 + answer.id * 0.05 }}
-                                    className={`bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border-l-4 ${isCorrectAnswer(answer.answer)
+                                    className={`bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border-l-4 ${answer.isCorrect
                                             ? 'border-green-500'
                                             : 'border-red-500'
                                         }`}
