@@ -9,32 +9,32 @@ const QuestionsScreen = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }} // Faster transition for the main container
-            className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 p-4 sm:p-6 overflow-hidden"
+            transition={{ duration: 0.3 }}
+            className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 p-4 sm:p-6"
         >
             {/* Countdown Timer (Top-Right Corner) */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }} // Faster transition for the countdown timer
+                transition={{ duration: 0.3 }}
                 className="absolute top-6 right-6 text-6xl font-bold text-red-400 animate-pulse"
             >
                 {secondCountdown}
             </motion.div>
 
             {/* Main Content Grid */}
-            <div className="h-screen flex flex-col lg:flex-row items-center justify-center gap-8 overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-12 w-full max-w-screen-lg">
                 {/* Image Section (Left Side) */}
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3 }} // Faster transition for the image section
-                    className="w-full lg:w-1/2 h-full flex items-center justify-center overflow-hidden"
+                    transition={{ duration: 0.3 }}
+                    className="w-full max-w-md lg:max-w-xl flex items-center justify-center overflow-hidden"
                 >
                     <img
                         src={currentQuestion?.image}
                         alt="Question Visual"
-                        className="w-full h-full max-h-[80vh] object-cover rounded-2xl shadow-2xl"
+                        className="w-full h-auto max-h-[60vh] object-contain rounded-2xl shadow-2xl"
                     />
                 </motion.div>
 
@@ -42,18 +42,18 @@ const QuestionsScreen = () => {
                 <motion.div
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }} // Faster transition with reduced delay for the text section
-                    className="w-full lg:w-1/2 h-full flex flex-col items-center justify-center text-center overflow-y-auto p-4"
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                    className="w-full max-w-md lg:max-w-xl flex flex-col items-center text-center p-6"
                 >
-                    <h1 className="text-5xl font-extrabold mb-4 text-white drop-shadow-lg">
+                    <h1 className="text-4xl sm:text-5xl font-extrabold mb-6 text-white drop-shadow-lg">
                         🏁 Let's do it! 🏁
                     </h1>
-                    <p className="text-lg mb-6 text-white/90">
+                    <p className="text-lg sm:text-xl mb-8 text-white/90">
                         Answer the question before time runs out! ⏳
                     </p>
-                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 w-full max-w-2xl border-2 border-white/20 shadow-2xl">
+                    <div className="bg-white/10 p-8 rounded-2xl w-full max-w-2xl border-2 border-white/20 shadow-2xl">
                         <h2 className="text-3xl font-bold mb-6 text-white">
-                            Your Question:
+                            Description:
                         </h2>
                         <p className="text-xl text-white/90">
                             {currentQuestion?.description}

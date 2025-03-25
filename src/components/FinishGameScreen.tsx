@@ -7,7 +7,7 @@ interface FinishGameScreenProps {
 export const FinishGameScreen: FC<FinishGameScreenProps> = ({ resetGame }) => {
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-700 to-purple-900 text-white p-6">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white p-6">
             {/* Title */}
             <motion.h1
                 initial={{ opacity: 0, y: -50 }}

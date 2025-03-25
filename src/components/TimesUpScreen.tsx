@@ -9,7 +9,6 @@ interface TimesUpScreenProps {
 const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
     const { currentQuestion, answers, loading } = useGlobalStore();
 
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -22,7 +21,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                 <motion.div
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.3 }} // Faster transition
                     className="text-center mb-8"
                 >
                     <h1 className="text-5xl font-extrabold mb-4 text-white drop-shadow-lg">
@@ -37,7 +36,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0.2, duration: 0.4 }} // Reduced delay and faster transition
                     className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mx-auto w-full max-w-2xl text-center mb-12 border-2 border-green-400 shadow-xl"
                 >
                     <h2 className="text-4xl font-bold text-green-400">
@@ -49,7 +48,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.3, duration: 0.4 }} // Faster and snappier transition
                     className="w-full max-w-6xl mx-auto flex-1 overflow-y-auto pb-8"
                 >
                     <h2 className="text-2xl font-semibold mb-8 text-white text-center">
@@ -64,7 +63,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                                     key={index}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 0.5 }}
-                                    transition={{ duration: 0.5 }}
+                                    transition={{ duration: 0.3 }} // Faster loading animation
                                     className="bg-white/10 backdrop-blur-lg rounded-xl p-4 h-24 animate-pulse"
                                 />
                             ))}
@@ -74,7 +73,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
+                            transition={{ delay: 0.2, duration: 0.3 }} // Shorter delay
                             className="text-center text-white/80 text-xl"
                         >
                             No answers were submitted. 😢
@@ -87,7 +86,10 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                                     key={answer.id}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2 + answer.id * 0.05 }}
+                                    transition={{
+                                        delay: 0.2 + answer.id * 0.05,
+                                        duration: 0.3, // Faster transition for answers
+                                    }}
                                     className={`bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border-l-4 ${answer.isCorrect
                                             ? 'border-green-500'
                                             : 'border-red-500'
@@ -111,7 +113,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
+                    transition={{ delay: 0.6, duration: 0.3 }} // Reduced delay for quicker button show
                     className="text-center mt-8"
                 >
                     <button

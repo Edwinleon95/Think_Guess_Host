@@ -14,7 +14,7 @@ const Home = () => {
 
     return (
         <motion.div
-            className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 px-4"
+            className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-600 to-purple-700 px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -50 }}
