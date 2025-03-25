@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useGlobalStore } from "../store";
 
 const QuestionsScreen = () => {
-    const { currentQuestion, secondCountdown, setSecondCountdown } = useGlobalStore();
+    const { currentQuestion, secondCountdown, setSecondCountdown, answerLeft } = useGlobalStore();
 
     return (
         <motion.div
@@ -12,15 +12,18 @@ const QuestionsScreen = () => {
             transition={{ duration: 0.3 }}
             className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 p-4 sm:p-6"
         >
-            {/* Countdown Timer (Top-Right Corner) */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="absolute top-6 right-6 text-6xl font-bold text-red-400 animate-pulse"
-            >
-                {secondCountdown}
-            </motion.div>
+            {/* Top Info Bar (Countdown + Players Left) */}
+            <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
+                {/* Countdown Timer */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-6xl font-bold text-red-400 animate-pulse"
+                >
+                    {secondCountdown}
+                </motion.div>
+            </div>
 
             {/* Main Content Grid */}
             <div className="flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-12 w-full max-w-screen-lg">
@@ -29,8 +32,29 @@ const QuestionsScreen = () => {
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="w-full max-w-md lg:max-w-xl flex items-center justify-center overflow-hidden"
+                    className="w-full max-w-md lg:max-w-xl flex flex-col items-center"
                 >
+                    {/* Players Left to Answer - Above Image */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="mb-4 w-full text-center"
+                    >
+                        <div className="inline-flex items-center bg-white/10 px-6 py-3 rounded-full backdrop-blur-sm border-2 border-white/20">
+                            <span className="text-white/90 text-lg font-medium mr-2">
+                                {answerLeft === null ? (
+                                    "All players need to answer!"
+                                ) : answerLeft === 1 ? (
+                                    "1 player still needs to answer!"
+                                ) : (
+                                    `${answerLeft} players still need to answer!`
+                                )}
+                            </span>
+                            <span className="text-yellow-300 text-xl">⚡</span>
+                        </div>
+                    </motion.div>
+
                     <img
                         src={currentQuestion?.image}
                         alt="Question Visual"

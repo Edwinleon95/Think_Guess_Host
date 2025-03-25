@@ -17,6 +17,7 @@ interface GlobalState {
     loading: boolean;
     secondCountdown: number;
     countdown: number;
+    answerLeft: number | null;  // Add answerLeft to the state
 
     // Actions for persisted states
     setSelectedCategoryId: (id: number) => void;
@@ -30,6 +31,7 @@ interface GlobalState {
     setLoading: (loading: boolean) => void;
     setSecondCountdown: (seconds: number) => void;
     setCountdown: (seconds: number) => void;
+    setAnswerLeft: (answerLeft: number | null) => void;  // Add action for answerLeft
 
     // Clear state action
     clearState: () => void;
@@ -47,18 +49,20 @@ const initialState: GlobalState = {
     loading: false,
     secondCountdown: 0,
     countdown: 0,
+    answerLeft: null, // Initialize answerLeft to -1
 
     // Placeholder functions (will be overridden by the store)
-    setSelectedCategoryId: () => {},
-    setSelectedItemId: () => {},
-    setRoomId: () => {},
-    setPlayersJoined: () => {},
-    setCurrentQuestion: () => {},
-    setAnswers: () => {},
-    setLoading: () => {},
-    setSecondCountdown: () => {},
-    setCountdown: () => {},
-    clearState: () => {},
+    setSelectedCategoryId: () => { },
+    setSelectedItemId: () => { },
+    setRoomId: () => { },
+    setPlayersJoined: () => { },
+    setCurrentQuestion: () => { },
+    setAnswers: () => { },
+    setLoading: () => { },
+    setSecondCountdown: () => { },
+    setCountdown: () => { },
+    setAnswerLeft: () => { }, // Placeholder for setAnswerLeft action
+    clearState: () => { },
 };
 
 export const useGlobalStore = create<GlobalState>()(
@@ -78,6 +82,7 @@ export const useGlobalStore = create<GlobalState>()(
             setLoading: (loading) => set({ loading }),
             setSecondCountdown: (seconds) => set({ secondCountdown: seconds }),
             setCountdown: (seconds) => set({ countdown: seconds }),
+            setAnswerLeft: (answerLeft) => set({ answerLeft }), // Action for setting answerLeft
 
             // Clear state action
             clearState: () => {
@@ -95,7 +100,7 @@ export const useGlobalStore = create<GlobalState>()(
                 selectedItemId: state.selectedItemId,
                 roomId: state.roomId,
                 playersJoined: state.playersJoined,
-                // currentQuestion, answers, loading, secondCountdown , countdown are NOT persisted
+                // currentQuestion, answers, loading, secondCountdown, countdown, and answerLeft are NOT persisted
             }),
         }
     )

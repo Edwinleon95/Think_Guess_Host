@@ -28,7 +28,8 @@ const MainGamingZone: React.FC = () => {
         secondCountdown,
         setSecondCountdown,
         countdown,
-        setCountdown
+        setCountdown,
+        setAnswerLeft
     } = useGlobalStore();
 
     const navigate = useNavigate();
@@ -58,6 +59,16 @@ const MainGamingZone: React.FC = () => {
     useEffect(() => {
         SOCKET.on("loadingGame", (dataIsReady: boolean) => {
             setDataIsReady(dataIsReady);
+        });
+
+        SOCKET.on("finishCurrentQuestion", (finishCurrentQuestion: boolean) => {
+            if (finishCurrentQuestion) {
+                setSecondCountdown(0);
+            }
+        });
+
+        SOCKET.on("answerLeft", (answerLeft: number) => {
+            setAnswerLeft(answerLeft);
         });
 
         SOCKET.on("finishGame", (finishGame: boolean) => {
@@ -144,6 +155,7 @@ const MainGamingZone: React.FC = () => {
         setCurrentQuestion(newQuestion);
         SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
         setSecondCountdown(60);
+        setAnswerLeft(null);
         setShowAnswer(false);
         SOCKET.emit("answerQuestion", { roomId: roomId, answer: "", showAnswer: false });
     };
