@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { motion } from "framer-motion";
 import { useGlobalStore } from "../store";
+import { QuestionsCount } from './QuestionsCount';
 
 interface TimesUpScreenProps {
     startNewQuestion: () => void;
@@ -132,6 +133,7 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                     </button>
                 </motion.div>
             </div>
+            <QuestionsCount />
         </motion.div>
     );
 };

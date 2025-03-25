@@ -18,6 +18,8 @@ interface GlobalState {
     secondCountdown: number;
     countdown: number;
     answerLeft: number | null;  // Add answerLeft to the state
+    questionsLength: number;  // Add questionsLength to the state
+    questionNumber: number;   // Add questionNumber to the state
 
     // Actions for persisted states
     setSelectedCategoryId: (id: number) => void;
@@ -31,7 +33,9 @@ interface GlobalState {
     setLoading: (loading: boolean) => void;
     setSecondCountdown: (seconds: number) => void;
     setCountdown: (seconds: number) => void;
-    setAnswerLeft: (answerLeft: number | null) => void;  // Add action for answerLeft
+    setAnswerLeft: (answerLeft: number | null) => void;  // Action for setting answerLeft
+    setQuestionsLength: (length: number) => void;       // Action for setting questionsLength
+    setQuestionNumber: (number: number) => void;        // Action for setting questionNumber
 
     // Clear state action
     clearState: () => void;
@@ -49,7 +53,9 @@ const initialState: GlobalState = {
     loading: false,
     secondCountdown: 0,
     countdown: 0,
-    answerLeft: null, // Initialize answerLeft to -1
+    answerLeft: null,
+    questionsLength: 0,
+    questionNumber: 0,
 
     // Placeholder functions (will be overridden by the store)
     setSelectedCategoryId: () => { },
@@ -61,7 +67,9 @@ const initialState: GlobalState = {
     setLoading: () => { },
     setSecondCountdown: () => { },
     setCountdown: () => { },
-    setAnswerLeft: () => { }, // Placeholder for setAnswerLeft action
+    setAnswerLeft: () => { },
+    setQuestionsLength: () => { },
+    setQuestionNumber: () => { },
     clearState: () => { },
 };
 
@@ -82,7 +90,9 @@ export const useGlobalStore = create<GlobalState>()(
             setLoading: (loading) => set({ loading }),
             setSecondCountdown: (seconds) => set({ secondCountdown: seconds }),
             setCountdown: (seconds) => set({ countdown: seconds }),
-            setAnswerLeft: (answerLeft) => set({ answerLeft }), // Action for setting answerLeft
+            setAnswerLeft: (answerLeft) => set({ answerLeft }),
+            setQuestionsLength: (length) => set({ questionsLength: length }),
+            setQuestionNumber: (number) => set({ questionNumber: number }),
 
             // Clear state action
             clearState: () => {
@@ -100,7 +110,7 @@ export const useGlobalStore = create<GlobalState>()(
                 selectedItemId: state.selectedItemId,
                 roomId: state.roomId,
                 playersJoined: state.playersJoined,
-                // currentQuestion, answers, loading, secondCountdown, countdown, and answerLeft are NOT persisted
+                // currentQuestion, answers, loading, secondCountdown, countdown, answerLeft, questionsLength, and questionNumber are NOT persisted
             }),
         }
     )

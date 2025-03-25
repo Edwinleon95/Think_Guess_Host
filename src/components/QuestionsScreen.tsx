@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useGlobalStore } from "../store";
+import { QuestionsCount } from "./QuestionsCount";
 
 const QuestionsScreen = () => {
     const { currentQuestion, secondCountdown, setSecondCountdown, answerLeft } = useGlobalStore();
@@ -93,6 +94,7 @@ const QuestionsScreen = () => {
                     </button>
                 </motion.div>
             </div>
+            <QuestionsCount />
         </motion.div>
     );
 };

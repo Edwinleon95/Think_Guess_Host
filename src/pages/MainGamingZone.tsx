@@ -29,7 +29,10 @@ const MainGamingZone: React.FC = () => {
         setSecondCountdown,
         countdown,
         setCountdown,
-        setAnswerLeft
+        setAnswerLeft,
+        setQuestionsLength,
+        setQuestionNumber,
+        questionsLength
     } = useGlobalStore();
 
     const navigate = useNavigate();
@@ -91,6 +94,7 @@ const MainGamingZone: React.FC = () => {
             try {
                 const response = await axios.get<Question[]>(`${BACKEND_URL}/items/category/${selectedCategoryId}`);
                 setQuestions(response.data);
+                setQuestionsLength(response.data.length);
                 // Ensure the event is emitted only after the listener is set up
                 SOCKET.emit("loadingGame", roomId);
 
@@ -152,6 +156,7 @@ const MainGamingZone: React.FC = () => {
         const newQuestions = questions.filter((_, index) => index !== randomIndex);
 
         setQuestions(newQuestions);
+        setQuestionNumber(questionsLength - newQuestions.length);
         setCurrentQuestion(newQuestion);
         SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
         setSecondCountdown(60);
