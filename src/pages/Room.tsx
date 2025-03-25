@@ -35,8 +35,8 @@ const Room = () => {
     const startGame = () => {
         if (!roomId) return;
         setLoading(true);
-        if (playersJoined.length < 2) {
-            toast.warning("You need at least 2 players to start!");
+        if (playersJoined.length < 1) {
+            toast.warning("You need at least one player to start!");
             return;
         }
         SOCKET.emit("startGame", roomId);
@@ -111,13 +111,9 @@ const Room = () => {
                             onClick={startGame}
                             className="px-8 py-4 text-xl"
                             loading={loading}
-                            disabled={playersJoined.length < 2}
+                            disabled={playersJoined.length < 1}  // Changed from < 2 to < 1
                         >
-                            {playersJoined.length < 2 ? (
-                                `Need ${2 - playersJoined.length} more player${playersJoined.length === 1 ? '' : 's'}`
-                            ) : (
-                                'Start Game 🚀'
-                            )}
+                            Start Game 🚀
                         </CreateButton>
                     </motion.div>
                 )}
