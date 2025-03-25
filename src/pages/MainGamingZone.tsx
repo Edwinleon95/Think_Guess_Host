@@ -99,6 +99,7 @@ const MainGamingZone: React.FC = () => {
             const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
             return () => clearTimeout(timer);
         } else if (countdown === 0 && secondCountdown === 0 && dataIsReady) {
+            SOCKET.emit("startPlayersGame", roomId);
             startNewQuestion();
         }
     }, [countdown]);
