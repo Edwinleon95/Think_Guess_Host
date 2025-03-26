@@ -1,6 +1,7 @@
 interface Player {
     id: number;
     name: string;
+    correctAnswers: number;
 }
 
 export interface Answer {

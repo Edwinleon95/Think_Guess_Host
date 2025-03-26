@@ -92,13 +92,17 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
                                         duration: 0.3, // Faster transition for answers
                                     }}
                                     className={`bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border-l-4 ${answer.isCorrect
-                                            ? 'border-green-500'
-                                            : 'border-red-500'
+                                        ? 'border-green-500'
+                                        : 'border-red-500'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="text-lg font-semibold text-white">
                                             {answer.player.name}
+                                        </div>
+                                        {/* Correct answers badge */}
+                                        <div className="flex items-center bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">
+                                            ✅ {answer.player.correctAnswers} Correct
                                         </div>
                                     </div>
                                     <div className="text-white/90 break-words">
