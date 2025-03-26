@@ -9,6 +9,8 @@ import QuestionsScreen from "../components/QuestionsScreen";
 import { LoadingBar } from "../components/LoadingBar";
 import { FinishGameScreen } from "../components/FinishGameScreen";
 import { Countdown } from "../components/Countdown";
+import { RevealAudio } from "../assets/RevealAudio";
+import { RunningAudio } from "../assets/RunningAudio";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -189,11 +191,22 @@ const MainGamingZone: React.FC = () => {
                         )}
                         {countdown === 0 && secondCountdown > 0 && !showAnswer && currentQuestion && (
                             // Game is running, show the current question
-                            <QuestionsScreen />
+                            <>
+                                <QuestionsScreen />
+                                <RunningAudio
+                                    playWhen={true} // Will play automatically when this block renders
+                                    src="/RuningQuestion.mp3"
+                                />
+                            </>
                         )}
                         {showAnswer && secondCountdown === 0 && countdown === 0 && currentQuestion && (
-                            // Time's up, show the correct answer
-                            <TimesUpScreen startNewQuestion={startNewQuestion} />
+                            <>
+                                <TimesUpScreen startNewQuestion={startNewQuestion} />
+                                <RevealAudio
+                                    playWhen={true} // Will play automatically when this block renders
+                                    src="/RevealQuestion.mp3"
+                                />
+                            </>
                         )}
                     </>
                 )
