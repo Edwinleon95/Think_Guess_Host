@@ -1,14 +1,17 @@
 import { FC, useMemo } from 'react';
 import { motion } from "framer-motion";
-import { useGlobalStore } from "../store";
 import { QuestionsCount } from './QuestionsCount';
+import { Question } from '../types/question.interface';
+import { Answer } from '../types/answer.interface';
 
 interface TimesUpScreenProps {
     startNewQuestion: () => void;
+    currentQuestion: Question | null;
+    loading: boolean;
+    answers: Answer[];
 }
 
-const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion }) => {
-    const { currentQuestion, answers, loading } = useGlobalStore();
+const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion, currentQuestion, loading, answers }) => {
 
     // Memoize the answers grid to prevent unnecessary re-renders
     const answersGrid = useMemo(() => {

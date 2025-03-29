@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Player } from "./types/player.interface";
-import { Question } from "./types/question.interface";
 import { Answer } from "./types/answer.interface";
 
 interface GlobalState {
@@ -12,14 +11,9 @@ interface GlobalState {
     playersJoined: Player[];
 
     // Non-persisted states
-    currentQuestion: Question | null;
     answers: Answer[];
-    loading: boolean;
-    secondCountdown: number;
-    countdown: number;
-    answerLeft: number | null;  // Add answerLeft to the state
-    questionsLength: number;  // Add questionsLength to the state
-    questionNumber: number;   // Add questionNumber to the state
+    questionsLength: number;  // Only questionsLength is retained here
+    questionNumber: number;   // Only questionNumber is retained here
 
     // Actions for persisted states
     setSelectedCategoryId: (id: number) => void;
@@ -27,13 +21,8 @@ interface GlobalState {
     setRoomId: (id: number) => void;
     setPlayersJoined: (players: Player[]) => void;
 
-    // Actions for non-persisted states
-    setCurrentQuestion: (question: Question | null) => void;
+    // Non-persisted actions
     setAnswers: (answers: Answer[]) => void;
-    setLoading: (loading: boolean) => void;
-    setSecondCountdown: (seconds: number) => void;
-    setCountdown: (seconds: number) => void;
-    setAnswerLeft: (answerLeft: number | null) => void;  // Action for setting answerLeft
     setQuestionsLength: (length: number) => void;       // Action for setting questionsLength
     setQuestionNumber: (number: number) => void;        // Action for setting questionNumber
 
@@ -48,12 +37,7 @@ const initialState: GlobalState = {
     roomId: null,
     playersJoined: [],
 
-    currentQuestion: null,
     answers: [],
-    loading: false,
-    secondCountdown: 0,
-    countdown: 0,
-    answerLeft: null,
     questionsLength: 0,
     questionNumber: 0,
 
@@ -62,12 +46,7 @@ const initialState: GlobalState = {
     setSelectedItemId: () => { },
     setRoomId: () => { },
     setPlayersJoined: () => { },
-    setCurrentQuestion: () => { },
     setAnswers: () => { },
-    setLoading: () => { },
-    setSecondCountdown: () => { },
-    setCountdown: () => { },
-    setAnswerLeft: () => { },
     setQuestionsLength: () => { },
     setQuestionNumber: () => { },
     clearState: () => { },
@@ -85,12 +64,7 @@ export const useGlobalStore = create<GlobalState>()(
             setPlayersJoined: (players) => set({ playersJoined: players }),
 
             // Non-persisted actions
-            setCurrentQuestion: (question) => set({ currentQuestion: question }),
             setAnswers: (answers) => set({ answers }),
-            setLoading: (loading) => set({ loading }),
-            setSecondCountdown: (seconds) => set({ secondCountdown: seconds }),
-            setCountdown: (seconds) => set({ countdown: seconds }),
-            setAnswerLeft: (answerLeft) => set({ answerLeft }),
             setQuestionsLength: (length) => set({ questionsLength: length }),
             setQuestionNumber: (number) => set({ questionNumber: number }),
 
@@ -110,7 +84,7 @@ export const useGlobalStore = create<GlobalState>()(
                 selectedItemId: state.selectedItemId,
                 roomId: state.roomId,
                 playersJoined: state.playersJoined,
-                // currentQuestion, answers, loading, secondCountdown, countdown, answerLeft, questionsLength, and questionNumber are NOT persisted
+                // answers, questionsLength, and questionNumber are NOT persisted
             }),
         }
     )

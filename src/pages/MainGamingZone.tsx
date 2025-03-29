@@ -11,34 +11,30 @@ import { FinishGameScreen } from "../components/FinishGameScreen";
 import { Countdown } from "../components/Countdown";
 import { RevealAudio } from "../assets/RevealAudio";
 import { RunningAudio } from "../assets/RunningAudio";
+import { Answer } from "../types/answer.interface";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const MainGamingZone: React.FC = () => {
-    const [dataIsReady, setDataIsReady] = useState<boolean>(false); // Set initial state to false
+    const navigate = useNavigate();
+    const [dataIsReady, setDataIsReady] = useState<boolean>(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
     const [gameEnded, setGameEnded] = useState<boolean>(false);
+    const [countdown, setCountdown] = useState<number>(0);
+    const [secondCountdown, setSecondCountdown] = useState<number>(0);
+    const [answerLeft, setAnswerLeft] = useState<number | null>(null);
+    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+    const [answers, setAnswers] = useState<Answer[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const {
         selectedCategoryId,
         roomId,
-        currentQuestion,
-        setCurrentQuestion,
-        setAnswers,
-        setLoading,
-        secondCountdown,
-        setSecondCountdown,
-        countdown,
-        setCountdown,
-        setAnswerLeft,
         setQuestionsLength,
         setQuestionNumber,
         questionsLength
     } = useGlobalStore();
-
-    const navigate = useNavigate();
-
 
     useEffect(() => {
         const enterFullScreen = async () => {
@@ -187,12 +183,17 @@ const MainGamingZone: React.FC = () => {
                     <>
                         {countdown > 0 && secondCountdown === 0 && (
                             // Initial countdown before the game starts
-                            <Countdown />
+                            <Countdown countdown={countdown} />
                         )}
                         {countdown === 0 && secondCountdown > 0 && !showAnswer && currentQuestion && (
                             // Game is running, show the current question
                             <>
-                                <QuestionsScreen />
+                                <QuestionsScreen
+                                    currentQuestion={currentQuestion}
+                                    secondCountdown={secondCountdown}
+                                    setSecondCountdown={setSecondCountdown}
+                                    answerLeft={answerLeft}
+                                />
                                 <RunningAudio
                                     playWhen={true} // Will play automatically when this block renders
                                     src="/RuningQuestion.mp3"
@@ -201,7 +202,11 @@ const MainGamingZone: React.FC = () => {
                         )}
                         {showAnswer && secondCountdown === 0 && countdown === 0 && currentQuestion && (
                             <>
-                                <TimesUpScreen startNewQuestion={startNewQuestion} />
+                                <TimesUpScreen
+                                    startNewQuestion={startNewQuestion}
+                                    currentQuestion={currentQuestion}
+                                    loading={loading}
+                                    answers={answers} />
                                 <RevealAudio
                                     playWhen={true} // Will play automatically when this block renders
                                     src="/RevealQuestion.mp3"

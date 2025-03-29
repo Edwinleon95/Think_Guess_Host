@@ -1,7 +1,10 @@
-import { useGlobalStore } from "../store"
+import React from "react";
 
-export const Countdown = () => {
-    const { countdown } = useGlobalStore();
+interface CountdownProps {
+    countdown: number;
+}
+
+export const Countdown: React.FC<CountdownProps> = ({ countdown }) => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white p-6">
             <div className="flex flex-col items-center">
@@ -13,5 +16,5 @@ export const Countdown = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

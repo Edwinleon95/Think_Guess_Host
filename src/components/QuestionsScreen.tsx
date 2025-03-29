@@ -1,9 +1,20 @@
 import { motion } from "framer-motion";
-import { useGlobalStore } from "../store";
 import { QuestionsCount } from "./QuestionsCount";
+import { Question } from '../types/question.interface'; // Assuming you have this type
 
-const QuestionsScreen = () => {
-    const { currentQuestion, secondCountdown, setSecondCountdown, answerLeft } = useGlobalStore();
+interface QuestionsScreenProps {
+    currentQuestion: Question | null;
+    secondCountdown: number;
+    setSecondCountdown: (value: number) => void;
+    answerLeft: number | null;
+}
+
+export const QuestionsScreen: React.FC<QuestionsScreenProps> = ({
+    currentQuestion,
+    secondCountdown,
+    setSecondCountdown,
+    answerLeft
+}) => {
 
     return (
         <motion.div
