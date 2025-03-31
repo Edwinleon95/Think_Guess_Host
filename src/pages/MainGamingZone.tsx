@@ -72,6 +72,10 @@ const MainGamingZone: React.FC = () => {
             setAnswerLeft(answerLeft);
         });
 
+        SOCKET.on("showAnswer", (showAnswer: boolean) => {
+            setShowAnswer(showAnswer);
+        });
+
         SOCKET.on("finishGame", (finishGame: boolean) => {
             if (finishGame) {
                 //TODO: Implement the logic to clear the state
@@ -83,6 +87,7 @@ const MainGamingZone: React.FC = () => {
         return () => {
             SOCKET.off("loadingGame");
             SOCKET.off("finishGame");
+            SOCKET.off("showAnswer");
         };
     }, []); // Empty dependency array ensures it runs only on mount
 
@@ -123,8 +128,7 @@ const MainGamingZone: React.FC = () => {
             const timer = setTimeout(() => setSecondCountdown(secondCountdown - 1), 1000);
             return () => clearTimeout(timer);
         } else if (secondCountdown === 0 && currentQuestion) {
-            setShowAnswer(true);
-            SOCKET.emit("answerQuestion", { roomId: roomId, answer: currentQuestion.name, showAnswer: true });
+            SOCKET.emit("showAnswer", { roomId, showAnswer: true });
             const fetchAnswers = async () => {
                 try {
                     setLoading(true);
@@ -159,8 +163,7 @@ const MainGamingZone: React.FC = () => {
         SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
         setSecondCountdown(60);
         setAnswerLeft(null);
-        setShowAnswer(false);
-        SOCKET.emit("answerQuestion", { roomId: roomId, answer: "", showAnswer: false });
+        SOCKET.emit("showAnswer", { roomId, showAnswer: false });
     };
 
     // Reset the game
