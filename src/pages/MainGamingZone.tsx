@@ -12,6 +12,7 @@ import { Countdown } from "../components/Countdown";
 import { RevealAudio } from "../assets/RevealAudio";
 import { RunningAudio } from "../assets/RunningAudio";
 import { Answer } from "../types/answer.interface";
+import { QRCode } from "../components/QRCode";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -197,6 +198,7 @@ const MainGamingZone: React.FC = () => {
                                     setSecondCountdown={setSecondCountdown}
                                     answerLeft={answerLeft}
                                 />
+                                <QRCode roomId={roomId} />
                                 <RunningAudio
                                     playWhen={true} // Will play automatically when this block renders
                                     src="/RuningQuestion.mp3"
@@ -210,6 +212,7 @@ const MainGamingZone: React.FC = () => {
                                     currentQuestion={currentQuestion}
                                     loading={loading}
                                     answers={answers} />
+                                <QRCode roomId={roomId} />
                                 <RevealAudio
                                     playWhen={true} // Will play automatically when this block renders
                                     src="/RevealQuestion.mp3"
