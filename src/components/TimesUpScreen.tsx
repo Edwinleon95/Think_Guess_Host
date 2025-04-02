@@ -9,9 +9,10 @@ interface TimesUpScreenProps {
     currentQuestion: Question | null;
     loading: boolean;
     answers: Answer[];
+    questions: Question[];
 }
 
-const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion, currentQuestion, loading, answers }) => {
+const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion, currentQuestion, loading, answers, questions }) => {
 
     // Memoize the answers grid to prevent unnecessary re-renders
     const answersGrid = useMemo(() => {
@@ -138,6 +139,8 @@ const TimesUpScreen: FC<TimesUpScreenProps> = ({ startNewQuestion, currentQuesti
                                 <div className="w-4 h-4 border-2 border-white rounded-full animate-spin" />
                                 Loading...
                             </span>
+                        ) : questions.length === 0 ? (
+                            'Show Ranking'
                         ) : (
                             'Next Question'
                         )}

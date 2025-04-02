@@ -13,6 +13,8 @@ import { RevealAudio } from "../assets/RevealAudio";
 import { RunningAudio } from "../assets/RunningAudio";
 import { Answer } from "../types/answer.interface";
 import { QRCode } from "../components/QRCode";
+import { Ranking } from "../types/ranking.interface";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -28,6 +30,7 @@ const MainGamingZone: React.FC = () => {
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [answers, setAnswers] = useState<Answer[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [ranking, setRanking] = useState<Ranking[]>([]);
 
     const {
         selectedCategoryId,
@@ -146,25 +149,41 @@ const MainGamingZone: React.FC = () => {
         }
     }, [secondCountdown]);
 
+    const getRanking = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get<Ranking[]>(`${BACKEND_URL}/answers/ranking/${roomId}`);
+            console.log("Ranking data:", response.data);
+            setRanking(response.data);
+        } catch (error) {
+            console.error("Error fetching ranking data:", error);
+            toast.error("Error fetching ranking data. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Start a new question
     const startNewQuestion = () => {
         if (questions.length === 0) {
+            getRanking();
             setGameEnded(true);
             return;
         }
 
         const randomIndex = Math.floor(Math.random() * questions.length);
         const newQuestion = questions[randomIndex];
+        const remainingQuestions = questions.filter((_, index) => index !== randomIndex);
 
-        const newQuestions = questions.filter((_, index) => index !== randomIndex);
-
-        setQuestions(newQuestions);
-        setQuestionNumber(questionsLength - newQuestions.length);
+        setQuestions(remainingQuestions);
+        setQuestionNumber(questionsLength - remainingQuestions.length);
         setCurrentQuestion(newQuestion);
-        SOCKET.emit("currentQuestion", { roomId: roomId, idQuestion: newQuestion.id });
+
+        SOCKET.emit("currentQuestion", { roomId, idQuestion: newQuestion.id });
+        SOCKET.emit("showAnswer", { roomId, showAnswer: false });
+
         setSecondCountdown(60);
         setAnswerLeft(null);
-        SOCKET.emit("showAnswer", { roomId, showAnswer: false });
     };
 
     // Reset the game
@@ -181,7 +200,10 @@ const MainGamingZone: React.FC = () => {
                 // When data is ready, check if the game has ended
                 gameEnded ? (
                     // Game ended screen
-                    <FinishGameScreen resetGame={resetGame} />
+                    <FinishGameScreen
+                        resetGame={resetGame}
+                        ranking={ranking}
+                        loading={loading} />
                 ) : (
                     // Game is still ongoing
                     <>
@@ -211,7 +233,9 @@ const MainGamingZone: React.FC = () => {
                                     startNewQuestion={startNewQuestion}
                                     currentQuestion={currentQuestion}
                                     loading={loading}
-                                    answers={answers} />
+                                    answers={answers}
+                                    questions={questions}
+                                />
                                 <QRCode roomId={roomId} />
                                 <RevealAudio
                                     playWhen={true} // Will play automatically when this block renders
